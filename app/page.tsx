@@ -61,7 +61,7 @@ export default function Home() {
             {[
               "손님 시점으로 GPT가 내 가게를 추천하는지 알 수 있어요",
               "GPT가 추천할 수 있게 어떤 걸 개선해야 하는지 알 수 있어요",
-              "직접 쉽게 실행할 수 있는 GPT 최적화 컨설팅 자료집(PDF)이 무료로 제공되요",
+              "직접 쉽게 실행할 수 있는 GPT 최적화 컨설팅 자료집(PDF)이 무료로 제공돼요",
             ].map((item, i) => (
               <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
                 <span style={{ color: "var(--accent)", fontSize: "13px", fontWeight: 700, flexShrink: 0, marginTop: "1px" }}>✓</span>

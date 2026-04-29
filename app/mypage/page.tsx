@@ -19,9 +19,12 @@ export default function MyPage() {
 
         {/* 사장님 요약 */}
         <div style={{ marginBottom: "16px" }}>
-          <h2 style={{ fontSize: "22px", fontWeight: 800, letterSpacing: "-0.03em", margin: 0, color: "var(--ink)" }}>
+          <h1 style={{ fontSize: "22px", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 4px", color: "var(--ink)" }}>
+            📋 내 매장 개선 노트
+          </h1>
+          <p style={{ fontSize: "14px", fontWeight: 600, color: "var(--ink-mid)", margin: 0 }}>
             광장동 한미옥 사장님
-          </h2>
+          </p>
         </div>
 
         {/* 진단권 현황 */}
@@ -144,7 +147,7 @@ export default function MyPage() {
 
         {/* 진단 이력 */}
         <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          진단 이력
+          📅 내 매장 진단 기록
         </p>
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",

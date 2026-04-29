@@ -218,7 +218,7 @@ export default function ResultPage() {
           border: "1px solid var(--border)", textDecoration: "none", letterSpacing: "-0.01em",
           marginBottom: "8px",
         }}>
-          📊 마이페이지에서 진단권 확인하기
+          📋 내 매장 개선 노트 보러가기
         </Link>
 
         <Link href="/diagnosis/input" style={{
