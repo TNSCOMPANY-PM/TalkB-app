@@ -30,14 +30,6 @@ function getLeverColor(level: string) {
   return "var(--success)";
 }
 
-function KakaoIcon({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 18 18" fill="currentColor">
-      <path d="M9 1C4.582 1 1 3.694 1 7.018c0 2.116 1.435 3.973 3.6 5.034l-.728 2.649c-.06.218.18.39.366.262L7.41 12.83C7.93 12.92 8.46 13 9 13c4.418 0 8-2.694 8-6.018C17 3.694 13.418 1 9 1z" />
-    </svg>
-  );
-}
-
 export default function ResultPage() {
   return (
     <div className="app-container">
@@ -48,15 +40,33 @@ export default function ResultPage() {
         <span style={{
           display: "inline-block", fontSize: "11px", color: "var(--accent)",
           background: "var(--accent-soft)", padding: "5px 10px", borderRadius: "999px",
-          marginBottom: "16px", fontWeight: 600, letterSpacing: "0.02em",
+          marginBottom: "12px", fontWeight: 600, letterSpacing: "0.02em",
         }}>
           Step 4 of 4 · 진단 결과
         </span>
 
+        {/* 카카오 알림톡 안내 배너 */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: "12px",
+          background: "#FEF7E0", borderRadius: "var(--r-md)",
+          padding: "12px 14px", marginBottom: "16px",
+          border: "1px solid #FAE29A",
+        }}>
+          <span style={{ fontSize: "20px", flexShrink: 0 }}>📨</span>
+          <div>
+            <p style={{ fontSize: "13px", fontWeight: 700, color: "#78501A", margin: "0 0 2px" }}>
+              카카오톡으로도 결과를 보내드렸어요
+            </p>
+            <p style={{ fontSize: "12px", color: "#A06A28", margin: 0, lineHeight: 1.5 }}>
+              언제든 알림톡으로 다시 확인하실 수 있어요
+            </p>
+          </div>
+        </div>
+
         {/* ① 결과 요약 — 충격 카드 */}
         <div style={{
           background: "var(--bg-dark)", borderRadius: "var(--r-lg)",
-          padding: "24px", marginBottom: "16px",
+          padding: "24px", marginBottom: "24px",
         }}>
           <span style={{
             display: "inline-block", fontSize: "12px", fontWeight: 700, color: "#D4D4D8",
@@ -72,7 +82,6 @@ export default function ResultPage() {
             같은 지역 경쟁사 평균 인용 횟수: 2.4회
           </p>
 
-          {/* 잠깐, 이게 중요해요 */}
           <div style={{
             background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
             borderRadius: "var(--r-sm)", padding: "14px",
@@ -88,69 +97,7 @@ export default function ResultPage() {
           </div>
         </div>
 
-        {/* ② 핵심 전환 1 — 카카오 채널 친구추가 */}
-        <div style={{
-          background: "var(--white)", border: "1px solid var(--border)",
-          borderRadius: "var(--r-md)", padding: "16px", marginBottom: "8px",
-          boxShadow: "var(--sh-sm)",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
-            <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>카카오 채널 친구추가</p>
-            <span style={{
-              fontSize: "11px", fontWeight: 700, color: "var(--accent)",
-              background: "var(--accent-soft)", padding: "2px 7px", borderRadius: "999px",
-            }}>진단권 +1</span>
-          </div>
-          <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 10px", lineHeight: 1.5 }}>
-            친구 상태 유지 시 30일마다 자동 충전 · 얼리버드 30% 할인 쿠폰 즉시 지급
-          </p>
-          <button style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
-            width: "100%", padding: "13px", background: "var(--kakao)", color: "var(--kakao-text)",
-            borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
-            border: "none", cursor: "pointer",
-          }}>
-            <KakaoIcon size={14} /> 채널 친구추가하고 진단권 받기
-          </button>
-        </div>
-
-        {/* ③ 핵심 전환 2 — 초대하기 */}
-        <div style={{
-          background: "var(--white)", border: "1px solid var(--border)",
-          borderRadius: "var(--r-md)", padding: "16px", marginBottom: "24px",
-          boxShadow: "var(--sh-sm)",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
-            <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>주변 사장님 초대하기</p>
-            <span style={{
-              fontSize: "11px", fontWeight: 700, color: "var(--accent)",
-              background: "var(--accent-soft)", padding: "2px 7px", borderRadius: "999px",
-            }}>진단권 +1</span>
-          </div>
-          <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 12px", lineHeight: 1.5 }}>
-            초대한 사장님이 진단 완료 시 자동 적립
-          </p>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "5px",
-              padding: "12px", background: "var(--bg-deep)", color: "var(--ink)",
-              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
-              border: "1px solid var(--border)", cursor: "pointer",
-            }}>
-              🔗 링크 복사
-            </button>
-            <button style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "5px",
-              padding: "12px", background: "var(--kakao)", color: "var(--kakao-text)",
-              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
-              border: "none", cursor: "pointer",
-            }}>
-              <KakaoIcon size={13} /> 카카오톡 공유
-            </button>
-          </div>
-        </div>
-
-        {/* ④ 질문별 인용 결과 */}
+        {/* ② 질문별 인용 결과 */}
         <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
           질문별 인용 결과
         </p>
@@ -179,7 +126,7 @@ export default function ResultPage() {
           ))}
         </div>
 
-        {/* ⑤ 5대 항목 */}
+        {/* ③ 5대 항목 */}
         <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
           5대 항목 자동 점검
         </p>
@@ -210,13 +157,13 @@ export default function ResultPage() {
           <span style={{ fontSize: "15px", fontWeight: 800, color: "var(--ink)", fontFamily: "var(--f-mono)" }}>23점 / 100</span>
         </div>
 
-        {/* ⑥ 경쟁사 */}
+        {/* ④ 경쟁사 */}
         <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
           이 자리를 차지한 경쟁 매장
         </p>
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
-          borderRadius: "var(--r-md)", overflow: "hidden", marginBottom: "24px",
+          borderRadius: "var(--r-md)", overflow: "hidden", marginBottom: "32px",
           boxShadow: "var(--sh-sm)",
         }}>
           {competitors.map((c, i) => (
@@ -246,22 +193,38 @@ export default function ResultPage() {
           </div>
         </div>
 
-        {/* ⑦ PDF + 추가 진단 */}
-        <button style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          width: "100%", padding: "15px", background: "var(--accent)", color: "#FFFFFF",
-          borderRadius: "var(--r-md)", fontSize: "15px", fontWeight: 800,
-          minHeight: "52px", border: "none", cursor: "pointer", letterSpacing: "-0.01em",
-          boxShadow: "var(--sh-accent)", marginBottom: "8px",
-        }}>
-          GPT 최적화 컨설팅 자료집(PDF) 받기
-        </button>
+        {/* ⑤ 하단 액션 */}
+        <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          📥 무료 자료집
+        </p>
+        <a
+          href="/sample-guide.pdf"
+          download
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            width: "100%", padding: "15px", background: "var(--accent)", color: "#FFFFFF",
+            borderRadius: "var(--r-md)", fontSize: "15px", fontWeight: 800,
+            minHeight: "52px", letterSpacing: "-0.01em", textDecoration: "none",
+            boxShadow: "var(--sh-accent)", marginBottom: "8px",
+          }}
+        >
+          GPT 최적화 컨설팅 자료집 다운받기 (PDF)
+        </a>
 
-        <Link href="/diagnosis/input" style={{
+        <Link href="/mypage" style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           width: "100%", padding: "13px", background: "var(--white)", color: "var(--ink)",
           borderRadius: "var(--r-md)", fontSize: "14px", fontWeight: 700,
           border: "1px solid var(--border)", textDecoration: "none", letterSpacing: "-0.01em",
+          marginBottom: "8px",
+        }}>
+          📊 마이페이지에서 진단권 확인하기
+        </Link>
+
+        <Link href="/diagnosis/input" style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          width: "100%", padding: "12px", color: "var(--ink-muted)", fontSize: "13px",
+          fontWeight: 600, textDecoration: "none", letterSpacing: "-0.01em",
         }}>
           다른 매장 추가 진단받기
         </Link>
