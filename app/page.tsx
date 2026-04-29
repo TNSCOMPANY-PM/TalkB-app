@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import Header from "@/components/talkb/header";
 import Footer from "@/components/talkb/footer";
 import TypewriterSearch from "@/components/talkb/typewriter-search";
+import InviteBanner from "@/components/talkb/invite-banner";
 
 export default function Home() {
   return (
@@ -9,6 +11,10 @@ export default function Home() {
       <Header isLoggedIn={false} />
 
       <main style={{ padding: "16px 20px 32px" }}>
+
+        <Suspense fallback={null}>
+          <InviteBanner />
+        </Suspense>
 
         <h1 style={{
           fontSize: "26px", fontWeight: 800, lineHeight: 1.35,
