@@ -5,7 +5,7 @@ import Footer from "@/components/talkb/footer";
 export default function CompletePage() {
   return (
     <div className="app-container">
-      <Header isLoggedIn={true} tickets={0} />
+      <Header isLoggedIn={true} tickets={1} />
 
       <main style={{ padding: "60px 20px 48px", textAlign: "center" }}>
         <div style={{
