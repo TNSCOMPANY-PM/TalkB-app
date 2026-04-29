@@ -19,12 +19,9 @@ export default function MyPage() {
 
         {/* 사장님 요약 */}
         <div style={{ marginBottom: "16px" }}>
-          <h2 style={{ fontSize: "22px", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 4px", color: "var(--ink)" }}>
+          <h2 style={{ fontSize: "22px", fontWeight: 800, letterSpacing: "-0.03em", margin: 0, color: "var(--ink)" }}>
             광장동 한미옥 사장님
           </h2>
-          <p style={{ fontSize: "13px", color: "var(--danger)", fontWeight: 600, margin: 0 }}>
-            최근 진단 · 5개 질문 중 0개 인용 · 평균 23점
-          </p>
         </div>
 
         {/* 진단권 현황 */}
@@ -62,7 +59,7 @@ export default function MyPage() {
           진단권 늘리기
         </p>
 
-        {/* 핵심 전환 1 — 카카오 채널 친구추가 */}
+        {/* 카카오 채널 친구추가 */}
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
           borderRadius: "var(--r-md)", padding: "16px", marginBottom: "8px",
@@ -79,25 +76,24 @@ export default function MyPage() {
             친구 상태 유지 시 30일마다 자동 충전
           </p>
 
-          {/* 얼리버드 */}
+          {/* 혜택 카드 */}
           <div style={{
-            background: "var(--bg-dark)", borderRadius: "var(--r-sm)",
-            padding: "12px", marginBottom: "10px",
+            background: "#FBF8F2", border: "1px solid #EDE8DC",
+            borderRadius: "var(--r-sm)", padding: "12px 14px", marginBottom: "10px",
           }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-              <span style={{ fontSize: "12px", fontWeight: 800, color: "var(--accent)" }}>🎁 얼리버드 쿠폰 즉시 지급</span>
-              <div style={{ display: "flex", gap: "4px" }}>
-                <span style={{ fontSize: "10px", fontWeight: 700, color: "#FAFAFA", background: "var(--danger)", padding: "2px 6px", borderRadius: "999px" }}>선착순 50명</span>
-                <span style={{ fontSize: "10px", fontWeight: 700, color: "#FAFAFA", background: "rgba(255,255,255,0.12)", padding: "2px 6px", borderRadius: "999px" }}>D-27</span>
+            <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 8px" }}>
+              🎁 채널 친구 전용 혜택
+            </p>
+            {[
+              "매월 진단권 1개 자동 충전",
+              "신규 서비스 런칭 시 최우선 안내",
+              "친구 전용 특별 혜택 제공",
+            ].map((item) => (
+              <div key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
+                <span style={{ color: "var(--success)", fontSize: "12px", fontWeight: 700, flexShrink: 0 }}>✓</span>
+                <span style={{ fontSize: "12.5px", color: "var(--ink-mid)" }}>{item}</span>
               </div>
-            </div>
-            <p style={{ fontSize: "12px", color: "#D4D4D8", margin: "0 0 4px", lineHeight: 1.5 }}>
-              5월 출시 예정 <strong style={{ color: "#FAFAFA" }}>AI 최적화 솔루션</strong>을 얼리버드{" "}
-              <strong style={{ color: "var(--accent)" }}>30% 할인</strong>
-            </p>
-            <p style={{ fontSize: "11px", color: "#6B6B6B", margin: 0 }}>
-              광진구 한식 전담팀 → 사장님 매장 직접 관리
-            </p>
+            ))}
           </div>
 
           <button style={{
@@ -110,7 +106,7 @@ export default function MyPage() {
           </button>
         </div>
 
-        {/* 핵심 전환 2 — 사장님 초대 */}
+        {/* 주변 사장님 초대하기 */}
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
           borderRadius: "var(--r-md)", padding: "16px", marginBottom: "24px",
@@ -155,7 +151,7 @@ export default function MyPage() {
           borderRadius: "var(--r-md)", padding: "14px 16px", marginBottom: "8px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <p style={{ fontSize: "14px", fontWeight: 600, color: "var(--ink)", margin: "0 0 2px" }}>광장동 한미옥</p>
               <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0 }}>4월 28일 · 5개 중 0개 인용 · 평균 23점</p>
@@ -174,19 +170,11 @@ export default function MyPage() {
         <Link href="/diagnosis/input" style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
           background: "var(--accent)", color: "#fff",
-          borderRadius: "var(--r-md)", padding: "15px 20px", marginBottom: "20px",
+          borderRadius: "var(--r-md)", padding: "15px 20px", marginTop: "16px",
           textDecoration: "none", boxShadow: "var(--sh-accent)",
         }}>
           <p style={{ fontSize: "14px", fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>추가 진단받기</p>
           <span style={{ fontSize: "18px" }}>→</span>
-        </Link>
-
-        <Link href="/" style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          width: "100%", padding: "12px", color: "var(--ink-muted)", fontSize: "13px",
-          textDecoration: "none",
-        }}>
-          처음으로
         </Link>
 
       </main>
