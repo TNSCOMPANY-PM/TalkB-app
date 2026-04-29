@@ -15,6 +15,7 @@ const screens = [
 
 export default function DevNav() {
   const pathname = usePathname();
+  if (process.env.NEXT_PUBLIC_APP_ENV !== "development") return null;
   return (
     <div style={{
       position: "fixed",
