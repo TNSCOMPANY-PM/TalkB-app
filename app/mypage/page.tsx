@@ -11,8 +11,11 @@ function KakaoIcon({ size = 14 }: { size?: number }) {
 }
 
 const REGISTERED = 1;
-const MAX_STORES = 3;
 const INVITED = 0;
+
+const stores = [
+  { name: "광장동 한미옥", date: "4월 28일", cited: 0, score: 23, nextDiagnosis: "5월 28일" },
+];
 
 export default function MyPage() {
   return (
@@ -22,7 +25,7 @@ export default function MyPage() {
       <main style={{ padding: "20px 20px 48px" }}>
 
         {/* 사장님 요약 */}
-        <div style={{ marginBottom: "16px" }}>
+        <div style={{ marginBottom: "20px" }}>
           <h1 style={{ fontSize: "22px", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 4px", color: "var(--ink)" }}>
             📋 내 매장 개선 노트
           </h1>
@@ -31,33 +34,64 @@ export default function MyPage() {
           </p>
         </div>
 
-        {/* 내 매장 현황 카드 */}
-        <div style={{
-          background: "var(--bg-dark)", borderRadius: "var(--r-md)",
-          padding: "16px", marginBottom: "20px",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
-            <p style={{ fontSize: "13px", fontWeight: 700, color: "#D4D4D8", margin: 0 }}>등록된 매장</p>
-            <span style={{ fontSize: "18px", fontWeight: 800, color: "var(--accent)", fontFamily: "var(--f-mono)" }}>
-              {REGISTERED} / {MAX_STORES}
-            </span>
+        {/* 🏪 운영 중인 매장 */}
+        <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          {REGISTERED === 1 ? "🏪 운영 중인 매장" : `🏪 내 매장 (${REGISTERED}개)`}
+        </p>
+
+        {stores.map((store) => (
+          <div key={store.name} style={{
+            background: "var(--white)", border: "1px solid var(--border)",
+            borderRadius: "var(--r-md)", padding: "14px 16px", marginBottom: "8px",
+            boxShadow: "var(--sh-sm)",
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div>
+                <p style={{ fontSize: "15px", fontWeight: 700, color: "var(--ink)", margin: "0 0 3px" }}>{store.name}</p>
+                <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 3px" }}>
+                  {store.date} 진단 · 5개 중 {store.cited}개 인용 · 평균 {store.score}점
+                </p>
+                <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 600, margin: 0 }}>
+                  다음 진단 예정: {store.nextDiagnosis}
+                </p>
+              </div>
+              <Link href="/diagnosis/result" style={{
+                padding: "7px 12px", background: "var(--white)", color: "var(--ink)",
+                borderRadius: "var(--r-sm)", fontSize: "12px", fontWeight: 700,
+                border: "1px solid var(--border)", textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0,
+              }}>
+                결과 보기
+              </Link>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: "6px", marginBottom: "12px" }}>
-            {Array.from({ length: MAX_STORES }).map((_, i) => (
-              <div key={i} style={{
-                flex: 1, height: "6px", borderRadius: "999px",
-                background: i < REGISTERED ? "var(--accent)" : "rgba(255,255,255,0.12)",
-              }} />
-            ))}
-          </div>
-          <p style={{ fontSize: "11px", color: "#6B6B6B", margin: 0 }}>
-            남은 슬롯 <strong style={{ color: "#A3A3A3" }}>{MAX_STORES - REGISTERED}개</strong> · 친구추가 또는 초대로 추가 등록 가능
+        ))}
+
+        {REGISTERED === 2 && (
+          <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "4px 0 0", textAlign: "center" }}>
+            💡 1명 더 초대하면 매장 1개 추가 등록 가능
           </p>
-        </div>
+        )}
+
+        {REGISTERED >= 3 && (
+          <div style={{ marginTop: "8px" }}>
+            <p style={{ fontSize: "12.5px", color: "var(--ink-mid)", margin: "0 0 8px", textAlign: "center" }}>
+              ⭐ 매장이 더 있으세요? Pro 플랜으로 무제한 등록 가능
+            </p>
+            <button style={{
+              width: "100%", padding: "12px", background: "var(--bg-dark)", color: "#FAFAFA",
+              borderRadius: "var(--r-md)", fontSize: "14px", fontWeight: 700,
+              border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer",
+            }}>
+              Pro 플랜 사전 등록
+            </button>
+          </div>
+        )}
+
+        <div style={{ height: "24px" }} />
 
         {/* 섹션 라벨 */}
         <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          매장 슬롯 늘리기
+          매장 추가 등록
         </p>
 
         {/* 카카오 채널 친구추가 */}
@@ -74,7 +108,7 @@ export default function MyPage() {
             }}>매장 +1 등록 가능</span>
           </div>
           <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 10px", lineHeight: 1.5 }}>
-            친구 상태 유지 시 슬롯 유지
+            친구 상태 유지 시 등록 유지
           </p>
 
           <div style={{
@@ -106,42 +140,38 @@ export default function MyPage() {
           </button>
         </div>
 
-        {/* 주변 사장님 초대하기 */}
+        {/* 초대하기 */}
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
           borderRadius: "var(--r-md)", padding: "16px", marginBottom: "24px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px" }}>
-            🤝 함께 성공하고 싶은 사장님 초대하기
+          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 10px" }}>
+            🤝 분점이 있으신가요? 진단을 더 받고 싶으신가요?
           </p>
 
-          {/* 내 초대 현황 */}
           <div style={{
             background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
             padding: "12px 14px", marginBottom: "10px",
             border: "1px solid var(--border-soft)",
           }}>
-            <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink-mid)", margin: "0 0 8px" }}>
-              내 초대: <strong style={{ color: "var(--ink)", fontSize: "14px" }}>{INVITED}명</strong>
+            <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 6px" }}>
+              내 초대: <strong style={{ color: "var(--ink)" }}>{INVITED}명</strong>
             </p>
-            <p style={{ fontSize: "11.5px", fontWeight: 700, color: "var(--ink)", margin: "0 0 6px" }}>
-              초대 1명당 받는 혜택 (택 1)
+            <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", margin: "0 0 6px" }}>
+              친구 1명 초대할 때마다 받는 혜택 (택 1):
             </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-              {[
-                "매장 1개 추가 등록",
-                "이번 달 진단 1회 추가",
-              ].map((item) => (
-                <div key={item} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span style={{ fontSize: "11px", color: "var(--ink-muted)" }}>○</span>
-                  <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>{item}</span>
-                </div>
-              ))}
-            </div>
+            {[
+              "🏪 매장 1개 추가 등록 (최대 3매장까지)",
+              "📊 이번 달 추가 진단 1회",
+            ].map((item) => (
+              <div key={item} style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
+                <span style={{ fontSize: "11px", color: "var(--ink-muted)" }}>·</span>
+                <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>{item}</span>
+              </div>
+            ))}
           </div>
 
-          {/* 명예 보상 */}
           <div style={{
             background: "var(--bg-dark)", borderRadius: "var(--r-sm)",
             padding: "12px 14px", marginBottom: "12px",
@@ -181,36 +211,11 @@ export default function MyPage() {
           </div>
         </div>
 
-        {/* 내 매장 진단 기록 */}
-        <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          📅 내 매장 진단 기록
-        </p>
-        <div style={{
-          background: "var(--white)", border: "1px solid var(--border)",
-          borderRadius: "var(--r-md)", padding: "14px 16px", marginBottom: "8px",
-          boxShadow: "var(--sh-sm)",
-        }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <div>
-              <p style={{ fontSize: "15px", fontWeight: 700, color: "var(--ink)", margin: "0 0 3px" }}>광장동 한미옥</p>
-              <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 3px" }}>4월 28일 진단 · 5개 중 0개 인용 · 평균 23점</p>
-              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 600, margin: 0 }}>다음 진단 예정: 5월 28일</p>
-            </div>
-            <Link href="/diagnosis/result" style={{
-              padding: "7px 12px", background: "var(--white)", color: "var(--ink)",
-              borderRadius: "var(--r-sm)", fontSize: "12px", fontWeight: 700,
-              border: "1px solid var(--border)", textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0,
-            }}>
-              결과 보기
-            </Link>
-          </div>
-        </div>
-
         {/* 매장 추가하기 */}
         <Link href="/diagnosis/input" style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
           background: "var(--accent)", color: "#fff",
-          borderRadius: "var(--r-md)", padding: "15px 20px", marginTop: "16px",
+          borderRadius: "var(--r-md)", padding: "15px 20px",
           textDecoration: "none", boxShadow: "var(--sh-accent)",
         }}>
           <p style={{ fontSize: "14px", fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>+ 매장 추가하기</p>

@@ -61,7 +61,7 @@ export default function Header({ isLoggedIn = false, tickets = 0 }: HeaderProps)
             border: tickets === 0 ? "none" : tickets >= 3 ? "1px solid var(--border)" : "1px solid rgba(232,93,58,0.25)",
             boxShadow: tickets === 0 ? "0 1px 4px rgba(239,68,68,0.3)" : "none",
           }}>
-            🏪 {tickets}/3
+            🏪 {tickets}개 운영
           </span>
           <Link
             href="/mypage"
