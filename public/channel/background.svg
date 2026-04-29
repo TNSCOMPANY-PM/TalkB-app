@@ -1,64 +1,89 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="780" viewBox="0 0 1080 780">
+  <defs>
+    <filter id="boxShadow" x="-5%" y="-10%" width="110%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#000000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
 
   <!-- Site white background -->
   <rect width="1080" height="780" fill="#FFFFFF"/>
 
-  <!-- Very subtle warm tint strip at top -->
-  <rect width="1080" height="4" fill="#E85D3A"/>
+  <!-- ── Main Headline (site landing page style) ────────── -->
 
-  <!-- Main headline line 1: dark ink, matches site h1 style -->
-  <text
-    x="88" y="280"
-    font-family="'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
-    font-size="80"
-    font-weight="800"
-    fill="#0A0A0A"
-    letter-spacing="-3"
-  >요즘 손님들은</text>
+  <!-- Line 1: 요즘 손님들은 — dark ink, matches h1 -->
+  <text x="80" y="222"
+    font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif"
+    font-size="76" font-weight="800" fill="#0A0A0A" letter-spacing="-2.5">요즘 손님들은</text>
 
-  <!-- Line 2: "GPT에" dark, "물어봅니다." accent -->
-  <text
-    x="88" y="378"
-    font-family="'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
-    font-size="80"
-    font-weight="800"
-    letter-spacing="-3"
-  >
+  <!-- Line 2: GPT에 (dark) + 물어봅니다. (accent) -->
+  <text x="80" y="312"
+    font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif"
+    font-size="76" font-weight="800" letter-spacing="-2.5">
     <tspan fill="#0A0A0A">GPT에 </tspan><tspan fill="#E85D3A">물어봅니다.</tspan>
   </text>
 
-  <!-- Sub headline: accent color, matches site accent heading -->
-  <text
-    x="88" y="476"
-    font-family="'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
-    font-size="52"
-    font-weight="700"
-    fill="#E85D3A"
-    letter-spacing="-2"
-  >사장님 가게가 나올까요?</text>
+  <!-- Sub headline: accent color -->
+  <text x="80" y="388"
+    font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif"
+    font-size="50" font-weight="700" fill="#E85D3A" letter-spacing="-1.5">사장님 가게가 나올까요?</text>
 
-  <!-- Thin divider matching site border color -->
-  <rect x="88" y="514" width="904" height="1" fill="#E4E4E7"/>
+  <!-- ── ChatGPT Answer Box ──────────────────────────────── -->
+  <!-- Box: exact site component styles -->
+  <rect x="80" y="435" width="900" height="225" rx="12" fill="#ffffff" filter="url(#boxShadow)" stroke="#e5e7eb" stroke-width="1"/>
 
-  <!-- Bottom right logo — ink-muted tone -->
-  <text
-    x="992" y="700"
+  <!-- Header bar -->
+  <rect x="80" y="435" width="900" height="44" rx="12" fill="#f9fafb"/>
+  <rect x="80" y="447" width="900" height="32" fill="#f9fafb"/>
+  <!-- Header border bottom -->
+  <rect x="80" y="479" width="900" height="1" fill="#e5e7eb"/>
+
+  <!-- ChatGPT icon: black circle -->
+  <circle cx="105" cy="457" r="11" fill="#000000"/>
+  <path transform="translate(98.8,450.8)"
+    d="M6 1C4.3 1 3.2 2.4 3.4 3.9C1.9 3.7 0.7 4.8 0.7 6.3C0.7 7.8 1.9 8.9 3.4 8.7C3.2 10.2 4.3 11.5 6 11.5C7.7 11.5 8.8 10.2 8.6 8.7C10.1 8.9 11.3 7.8 11.3 6.3C11.3 4.8 10.1 3.7 8.6 3.9C8.8 2.4 7.7 1 6 1Z"
+    fill="white" opacity="0.9"/>
+
+  <!-- ChatGPT label -->
+  <text x="123" y="462"
+    font-family="'Pretendard','Helvetica Neue',Arial,sans-serif"
+    font-size="13" font-weight="700" fill="#111111" letter-spacing="-0.3">ChatGPT</text>
+
+  <!-- Hamburger menu -->
+  <rect x="948" y="451" width="14" height="2" rx="1" fill="#9ca3af"/>
+  <rect x="948" y="456" width="14" height="2" rx="1" fill="#9ca3af"/>
+  <rect x="948" y="461" width="14" height="2" rx="1" fill="#9ca3af"/>
+
+  <!-- User message bubble (right-aligned inside box) -->
+  <rect x="694" y="493" width="266" height="34" rx="16" fill="#f4f4f4"/>
+  <text x="827" y="515"
+    text-anchor="middle"
+    font-family="'Pretendard','Malgun Gothic',sans-serif"
+    font-size="12.5" fill="#111111">광장동 근처 회식하기 좋은 한식당 추천해줘</text>
+
+  <!-- GPT response avatar -->
+  <circle cx="104" cy="575" r="12" fill="#000000"/>
+  <path transform="translate(97.8,568.8)"
+    d="M6 1C4.3 1 3.2 2.4 3.4 3.9C1.9 3.7 0.7 4.8 0.7 6.3C0.7 7.8 1.9 8.9 3.4 8.7C3.2 10.2 4.3 11.5 6 11.5C7.7 11.5 8.8 10.2 8.6 8.7C10.1 8.9 11.3 7.8 11.3 6.3C11.3 4.8 10.1 3.7 8.6 3.9C8.8 2.4 7.7 1 6 1Z"
+    fill="white" opacity="0.9"/>
+
+  <!-- GPT response text (matches site typewriter text style exactly) -->
+  <text x="124" y="565"
+    font-family="'Pretendard','Malgun Gothic',sans-serif"
+    font-size="13" fill="#374151" letter-spacing="-0.2">
+    광장동 <tspan font-weight="700" fill="#E85D3A">'한울정'</tspan><tspan>, '</tspan><tspan fill="#E85D3A" font-weight="700">초가마루</tspan><tspan>', '가람한식'을 추천드립니다.</tspan>
+  </text>
+  <text x="124" y="585"
+    font-family="'Pretendard','Malgun Gothic',sans-serif"
+    font-size="13" fill="#374151" letter-spacing="-0.2">한울정은 룸 구성이 잘 돼 있어 단체 회식에 특히 인기가 많습니다.</text>
+
+  <!-- ── Bottom-right Logo ──────────────────────────────── -->
+  <text x="992" y="714"
     text-anchor="end"
-    font-family="'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif"
-    font-size="28"
-    font-weight="800"
-    fill="#0A0A0A"
-    letter-spacing="-1"
-  >TalkB</text>
+    font-family="'Pretendard','Arial Black','Helvetica Neue',Arial,sans-serif"
+    font-size="30" font-weight="900" fill="#0A0A0A" letter-spacing="-1">TalkB</text>
 
-  <text
-    x="992" y="732"
+  <text x="992" y="746"
     text-anchor="end"
-    font-family="'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif"
-    font-size="20"
-    font-weight="500"
-    fill="#757575"
-    letter-spacing="3"
-  >토크비</text>
-
+    font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif"
+    font-size="20" font-weight="500" fill="#757575" letter-spacing="3">토크비</text>
 </svg>

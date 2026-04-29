@@ -1,39 +1,73 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640">
+  <defs>
+    <filter id="cardShadow" x="-15%" y="-15%" width="130%" height="150%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#000000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
 
-  <!-- Flat accent background — exact site color #E85D3A -->
+  <!-- Background: exact site accent color, flat -->
   <rect width="640" height="640" fill="#E85D3A"/>
 
-  <!-- Simple chat bubble (site identity) centered, white -->
-  <g transform="translate(320, 218)">
-    <rect x="-68" y="-44" width="136" height="82" rx="22" fill="white" opacity="0.95"/>
-    <!-- tail -->
-    <path d="M -16 38 L -40 60 L 10 38 Z" fill="white" opacity="0.95"/>
-    <!-- three dots -->
-    <circle cx="-24" cy="-3" r="9" fill="#E85D3A"/>
-    <circle cx="0"   cy="-3" r="9" fill="#E85D3A"/>
-    <circle cx="24"  cy="-3" r="9" fill="#E85D3A"/>
-  </g>
+  <!-- ── ChatGPT Card ─────────────────────────────────── -->
+  <!-- Card base (white) -->
+  <rect x="90" y="119" width="460" height="235" rx="12" fill="#ffffff" filter="url(#cardShadow)"/>
 
-  <!-- TalkB — Pretendard fallback chain -->
-  <text
-    x="320" y="390"
+  <!-- Header bg: top corners rounded, bottom square -->
+  <rect x="90" y="119" width="460" height="44" rx="12" fill="#f9fafb"/>
+  <rect x="90" y="131" width="460" height="32" fill="#f9fafb"/>
+  <!-- Header border bottom -->
+  <rect x="90" y="163" width="460" height="1" fill="#e5e7eb"/>
+
+  <!-- ChatGPT icon: black circle -->
+  <circle cx="114" cy="141" r="11" fill="#000000"/>
+  <!-- Abstract flower pattern (OpenAI-style, non-copy) -->
+  <path transform="translate(108,135)"
+    d="M6 1C4.3 1 3.2 2.4 3.4 3.9C1.9 3.7 0.7 4.8 0.7 6.3C0.7 7.8 1.9 8.9 3.4 8.7C3.2 10.2 4.3 11.5 6 11.5C7.7 11.5 8.8 10.2 8.6 8.7C10.1 8.9 11.3 7.8 11.3 6.3C11.3 4.8 10.1 3.7 8.6 3.9C8.8 2.4 7.7 1 6 1Z"
+    fill="white" opacity="0.9"/>
+
+  <!-- "ChatGPT" label -->
+  <text x="132" y="146"
+    font-family="'Pretendard','Helvetica Neue',Arial,sans-serif"
+    font-size="13" font-weight="700" fill="#111111" letter-spacing="-0.3">ChatGPT</text>
+
+  <!-- Hamburger menu lines -->
+  <rect x="522" y="135" width="14" height="2" rx="1" fill="#9ca3af"/>
+  <rect x="522" y="140" width="14" height="2" rx="1" fill="#9ca3af"/>
+  <rect x="522" y="145" width="14" height="2" rx="1" fill="#9ca3af"/>
+
+  <!-- ── Chat Content ──────────────────────────────────── -->
+
+  <!-- User message bubble (right-aligned) -->
+  <rect x="313" y="177" width="221" height="32" rx="14" fill="#f4f4f4"/>
+  <text x="423" y="198"
     text-anchor="middle"
-    font-family="'Pretendard', 'Apple SD Gothic Neo', 'Helvetica Neue', Arial, sans-serif"
-    font-size="116"
-    font-weight="900"
-    letter-spacing="-5"
-    fill="white"
-  >TalkB</text>
+    font-family="'Pretendard','Malgun Gothic',sans-serif"
+    font-size="11.5" fill="#111111">광장동 회식 맛집 추천해줘</text>
 
-  <!-- 토크비 — subtle, gives context -->
-  <text
-    x="320" y="448"
+  <!-- GPT response: avatar -->
+  <circle cx="110" cy="252" r="12" fill="#000000"/>
+  <path transform="translate(103.8,245.8)"
+    d="M6 1C4.3 1 3.2 2.4 3.4 3.9C1.9 3.7 0.7 4.8 0.7 6.3C0.7 7.8 1.9 8.9 3.4 8.7C3.2 10.2 4.3 11.5 6 11.5C7.7 11.5 8.8 10.2 8.6 8.7C10.1 8.9 11.3 7.8 11.3 6.3C11.3 4.8 10.1 3.7 8.6 3.9C8.8 2.4 7.7 1 6 1Z"
+    fill="white" opacity="0.9"/>
+
+  <!-- GPT response text: store name highlighted in accent color -->
+  <text x="130" y="242"
+    font-family="'Pretendard','Malgun Gothic',sans-serif"
+    font-size="12.5" fill="#374151" letter-spacing="-0.2">
+    <tspan font-weight="700" fill="#E85D3A">'한미옥'</tspan><tspan>, '한울정' 등을 추천드립니다.</tspan>
+  </text>
+  <text x="130" y="264"
+    font-family="'Pretendard','Malgun Gothic',sans-serif"
+    font-size="12.5" fill="#374151" letter-spacing="-0.2">한미옥은 룸이 잘 돼 있어 회식에 인기입니다.</text>
+
+  <!-- ── TalkB Wordmark ────────────────────────────────── -->
+  <text x="320" y="462"
     text-anchor="middle"
-    font-family="'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif"
-    font-size="32"
-    font-weight="600"
-    letter-spacing="10"
-    fill="rgba(255,255,255,0.65)"
-  >토크비</text>
+    font-family="'Pretendard','Arial Black','Helvetica Neue',Arial,sans-serif"
+    font-size="92" font-weight="900" fill="white" letter-spacing="-4">TalkB</text>
 
+  <text x="320" y="514"
+    text-anchor="middle"
+    font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif"
+    font-size="28" font-weight="600" fill="rgba(255,255,255,0.65)" letter-spacing="10">토크비</text>
 </svg>
