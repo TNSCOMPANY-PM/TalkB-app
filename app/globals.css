@@ -1,27 +1,118 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --color-card: var(--white);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--white);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--accent);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--bg-soft);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--bg-soft);
+  --color-muted-foreground: var(--ink-mid);
+  --color-accent: var(--accent);
+  --color-accent-foreground: #ffffff;
+  --color-destructive: var(--danger);
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--accent);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
 }
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+    /* Color */
+    --bg: #FFFFFF;
+    --bg-soft: #FAFAFA;
+    --bg-deep: #F5F5F5;
+    --bg-dark: #0A0A0A;
+    --white: #FFFFFF;
+    --ink: #0A0A0A;
+    --ink-soft: #171717;
+    --ink-mid: #52525B;
+    --ink-muted: #757575;
+    --ink-light: #D4D4D8;
+    --border: #E4E4E7;
+    --border-soft: #F4F4F5;
+    --border-strong: #D4D4D8;
+    --accent: #E85D3A;
+    --accent-deep: #C94422;
+    --accent-soft: #FFF1EC;
+    --accent-paper: #FFF7F3;
+    --success: #16A34A;
+    --success-soft: #F0FDF4;
+    --danger: #DC2626;
+    --danger-soft: #FEF2F2;
+    --kakao: #FEE500;
+    --kakao-text: #191919;
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+    /* Typography */
+    --f-body: 'Pretendard', -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, sans-serif;
+    --f-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+    /* Radius */
+    --r-sm: 8px;
+    --r-md: 16px;
+    --r-lg: 24px;
+    --r-xl: 32px;
+
+    /* Shadow */
+    --sh-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --sh-md: 0 4px 16px rgba(0,0,0,0.04);
+    --sh-lg: 0 16px 48px rgba(0,0,0,0.06);
+    --sh-accent: 0 12px 32px rgba(232,93,58,0.15);
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--bg);
+    position: relative;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .font-mono {
+    font-family: var(--f-mono);
   }
 }
