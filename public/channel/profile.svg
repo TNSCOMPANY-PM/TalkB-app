@@ -1,59 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#F97316"/>
-      <stop offset="100%" style="stop-color:#E8632A"/>
-    </linearGradient>
-  </defs>
 
-  <!-- Background -->
-  <rect width="640" height="640" fill="url(#bg)" rx="80"/>
+  <!-- Flat accent background — exact site color #E85D3A -->
+  <rect width="640" height="640" fill="#E85D3A"/>
 
-  <!-- Chat bubble icon (face) -->
-  <g transform="translate(320, 210)">
-    <!-- Main bubble -->
-    <rect x="-88" y="-62" width="176" height="112" rx="28" fill="rgba(255,255,255,0.22)"/>
-    <!-- Tail -->
-    <polygon points="-24,50 -50,74 8,50" fill="rgba(255,255,255,0.22)"/>
-    <!-- Dots inside bubble -->
-    <circle cx="-30" cy="-6" r="10" fill="white" opacity="0.9"/>
-    <circle cx="0" cy="-6" r="10" fill="white" opacity="0.9"/>
-    <circle cx="30" cy="-6" r="10" fill="white" opacity="0.9"/>
+  <!-- Simple chat bubble (site identity) centered, white -->
+  <g transform="translate(320, 218)">
+    <rect x="-68" y="-44" width="136" height="82" rx="22" fill="white" opacity="0.95"/>
+    <!-- tail -->
+    <path d="M -16 38 L -40 60 L 10 38 Z" fill="white" opacity="0.95"/>
+    <!-- three dots -->
+    <circle cx="-24" cy="-3" r="9" fill="#E85D3A"/>
+    <circle cx="0"   cy="-3" r="9" fill="#E85D3A"/>
+    <circle cx="24"  cy="-3" r="9" fill="#E85D3A"/>
   </g>
 
-  <!-- TalkB wordmark -->
+  <!-- TalkB — Pretendard fallback chain -->
   <text
-    x="320"
-    y="358"
+    x="320" y="390"
     text-anchor="middle"
-    font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
-    font-size="108"
+    font-family="'Pretendard', 'Apple SD Gothic Neo', 'Helvetica Neue', Arial, sans-serif"
+    font-size="116"
     font-weight="900"
-    letter-spacing="-4"
+    letter-spacing="-5"
     fill="white"
   >TalkB</text>
 
-  <!-- 토크비 subtitle -->
+  <!-- 토크비 — subtle, gives context -->
   <text
-    x="320"
-    y="420"
+    x="320" y="448"
     text-anchor="middle"
-    font-family="'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif"
-    font-size="36"
-    font-weight="700"
-    letter-spacing="8"
-    fill="rgba(255,255,255,0.75)"
+    font-family="'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif"
+    font-size="32"
+    font-weight="600"
+    letter-spacing="10"
+    fill="rgba(255,255,255,0.65)"
   >토크비</text>
 
-  <!-- Tagline -->
-  <text
-    x="320"
-    y="480"
-    text-anchor="middle"
-    font-family="'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif"
-    font-size="22"
-    font-weight="500"
-    fill="rgba(255,255,255,0.55)"
-    letter-spacing="1"
-  >외식업 전문 AI 노출 솔루션</text>
 </svg>
