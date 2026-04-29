@@ -21,6 +21,20 @@ export default function Home() {
         {/* GPT 검색창 데모 */}
         <TypewriterSearch />
 
+        {/* 버튼 상단 문구 */}
+        <div style={{
+          background: "var(--bg-dark)", borderRadius: "var(--r-md)",
+          padding: "16px 18px", marginBottom: "12px",
+        }}>
+          <p style={{ fontSize: "15px", fontWeight: 800, color: "#FAFAFA", lineHeight: 1.45, margin: "0 0 8px", letterSpacing: "-0.02em" }}>
+            내가 검색하면 나오는 우리 가게,<br />
+            <span style={{ color: "var(--accent)" }}>손님이 검색해도 나올까요?</span>
+          </p>
+          <p style={{ fontSize: "12.5px", color: "#A3A3A3", margin: 0, lineHeight: 1.65 }}>
+            GPT는 사장님을 기억합니다. 토크비는 진짜 손님 환경에서 확인해드려요.
+          </p>
+        </div>
+
         {/* CTA */}
         <Link href="/diagnosis/login" style={{
           display: "flex", alignItems: "center", justifyContent: "center",
