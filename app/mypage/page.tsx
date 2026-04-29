@@ -94,12 +94,8 @@ export default function MyPage() {
           borderRadius: "var(--r-md)", padding: "16px", marginBottom: "8px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "4px" }}>
             <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>카카오 채널 친구추가</p>
-            <span style={{
-              fontSize: "11px", fontWeight: 700, color: "var(--accent)",
-              background: "var(--accent-soft)", padding: "2px 7px", borderRadius: "999px",
-            }}>매장 +1 등록 가능</span>
           </div>
           <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 10px", lineHeight: 1.5 }}>
             친구 상태 유지 시 등록 유지
@@ -141,7 +137,7 @@ export default function MyPage() {
           boxShadow: "var(--sh-sm)",
         }}>
           <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px", lineHeight: 1.4 }}>
-            🤝 분점이 있으신가요? 경쟁사가 궁금하신가요?
+            🤝 추가하실 매장이 있으신가요? 경쟁사가 궁금하신가요?
           </p>
 
           {/* 즉시 보상 */}
