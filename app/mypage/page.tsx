@@ -35,9 +35,18 @@ export default function MyPage() {
         </div>
 
         {/* 🏪 운영 중인 매장 */}
-        <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          {REGISTERED === 1 ? "🏪 운영 중인 매장" : `🏪 내 매장 (${REGISTERED}개)`}
-        </p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+          <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            {REGISTERED === 1 ? "🏪 운영 중인 매장" : `🏪 내 매장 (${REGISTERED}개)`}
+          </p>
+          <span style={{
+            fontSize: "11px", fontWeight: 600, color: "var(--ink-mid)",
+            background: "var(--bg-deep)", padding: "3px 9px", borderRadius: "999px",
+            border: "1px solid var(--border)",
+          }}>
+            Free 플랜 · {REGISTERED}개 운영
+          </span>
+        </div>
 
         {stores.map((store) => (
           <div key={store.name} style={{
@@ -70,21 +79,6 @@ export default function MyPage() {
           <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "4px 0 0", textAlign: "center" }}>
             💡 1명 더 초대하면 매장 1개 추가 등록 가능
           </p>
-        )}
-
-        {REGISTERED >= 3 && (
-          <div style={{ marginTop: "8px" }}>
-            <p style={{ fontSize: "12.5px", color: "var(--ink-mid)", margin: "0 0 8px", textAlign: "center" }}>
-              ⭐ 매장이 더 있으세요? Pro 플랜으로 무제한 등록 가능
-            </p>
-            <button style={{
-              width: "100%", padding: "12px", background: "var(--bg-dark)", color: "#FAFAFA",
-              borderRadius: "var(--r-md)", fontSize: "14px", fontWeight: 700,
-              border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer",
-            }}>
-              Pro 플랜 사전 등록
-            </button>
-          </div>
         )}
 
         <div style={{ height: "24px" }} />
@@ -253,6 +247,42 @@ export default function MyPage() {
           <p style={{ fontSize: "14px", fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>+ 매장 추가하기</p>
           <span style={{ fontSize: "18px" }}>→</span>
         </Link>
+
+        <div style={{ height: "28px" }} />
+
+        {/* Pro 플랜 사전 등록 */}
+        <div style={{
+          background: "var(--white)", border: "1px solid var(--border)",
+          borderRadius: "var(--r-md)", padding: "18px 16px",
+          boxShadow: "var(--sh-sm)",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+            <span style={{ fontSize: "16px" }}>⭐</span>
+            <p style={{ fontSize: "14px", fontWeight: 800, color: "var(--ink)", margin: 0 }}>Pro 플랜 준비 중</p>
+            <span style={{
+              fontSize: "10px", fontWeight: 700, color: "var(--accent)",
+              background: "var(--accent-soft)", padding: "2px 8px", borderRadius: "999px",
+              border: "1px solid rgba(232,93,58,0.2)", marginLeft: "auto",
+            }}>Coming Soon</span>
+          </div>
+          {[
+            "매장 무제한 등록",
+            "데이터 정밀 분석 리포트",
+            "전담 우선 지원",
+          ].map((item) => (
+            <div key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "7px" }}>
+              <span style={{ color: "var(--accent)", fontSize: "12px", fontWeight: 700, flexShrink: 0 }}>✓</span>
+              <span style={{ fontSize: "13px", color: "var(--ink-mid)" }}>{item}</span>
+            </div>
+          ))}
+          <button style={{
+            width: "100%", padding: "12px", background: "var(--bg-dark)", color: "#FAFAFA",
+            borderRadius: "var(--r-md)", fontSize: "14px", fontWeight: 700,
+            border: "1px solid rgba(255,255,255,0.08)", cursor: "pointer", marginTop: "8px",
+          }}>
+            Pro 플랜 출시 알림 받기
+          </button>
+        </div>
 
       </main>
 

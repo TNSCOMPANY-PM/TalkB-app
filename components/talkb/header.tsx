@@ -51,7 +51,7 @@ export default function Header({ isLoggedIn = false, tickets = 0 }: HeaderProps)
             <span style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink-mid)", letterSpacing: "-0.01em" }}>토크비</span>
           </div>
           <p style={{ fontSize: "10px", fontWeight: 600, color: "var(--ink-muted)", margin: "2px 0 0", letterSpacing: "0.01em" }}>
-            NO.1 외식업 전문 AI노출 솔루션
+            외식업 전문 AI 노출 솔루션
           </p>
         </Link>
 
