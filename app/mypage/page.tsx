@@ -10,8 +10,8 @@ function KakaoIcon({ size = 14 }: { size?: number }) {
   );
 }
 
-const REGISTERED = 1;
-const INVITED = 0;
+const REGISTERED: number = 1;
+const INVITED: number = 0;
 
 const stores = [
   { name: "광장동 한미옥", date: "4월 28일", cited: 0, score: 23, nextDiagnosis: "5월 28일" },
