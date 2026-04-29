@@ -33,7 +33,7 @@ function getLeverColor(level: string) {
 export default function ResultPage() {
   return (
     <div className="app-container">
-      <Header />
+      <Header isLoggedIn={true} tickets={0} />
 
       <main style={{ padding: "20px 20px 48px" }}>
 

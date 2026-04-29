@@ -6,7 +6,7 @@ import TypewriterSearch from "@/components/talkb/typewriter-search";
 export default function Home() {
   return (
     <div className="app-container">
-      <Header />
+      <Header isLoggedIn={false} />
 
       <main style={{ padding: "16px 20px 32px" }}>
 

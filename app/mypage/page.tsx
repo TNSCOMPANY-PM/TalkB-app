@@ -13,7 +13,7 @@ function KakaoIcon({ size = 14 }: { size?: number }) {
 export default function MyPage() {
   return (
     <div className="app-container">
-      <Header showTickets={true} tickets={0} />
+      <Header isLoggedIn={true} tickets={0} />
 
       <main style={{ padding: "20px 20px 48px" }}>
 
