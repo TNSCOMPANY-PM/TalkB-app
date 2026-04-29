@@ -52,19 +52,16 @@ export default function Header({ isLoggedIn = false, tickets = 0 }: HeaderProps)
       {isLoggedIn ? (
         <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
           <span style={{
-            display: "inline-flex", alignItems: "center", gap: "5px",
-            fontSize: "13px", fontWeight: 800, color: tickets === 0 ? "#fff" : "var(--accent)",
-            background: tickets === 0 ? "#EF4444" : "var(--accent-soft)",
+            display: "inline-flex", alignItems: "center", gap: "4px",
+            fontSize: "13px", fontWeight: 800,
+            color: tickets >= 3 ? "var(--ink-mid)" : tickets === 0 ? "#fff" : "var(--accent)",
+            background: tickets >= 3 ? "var(--bg-deep)" : tickets === 0 ? "#EF4444" : "var(--accent-soft)",
             padding: "6px 12px", borderRadius: "999px",
             whiteSpace: "nowrap", letterSpacing: "-0.01em",
-            border: tickets === 0 ? "none" : "1px solid rgba(232,93,58,0.25)",
+            border: tickets === 0 ? "none" : tickets >= 3 ? "1px solid var(--border)" : "1px solid rgba(232,93,58,0.25)",
             boxShadow: tickets === 0 ? "0 1px 4px rgba(239,68,68,0.3)" : "none",
           }}>
-            {tickets === 0
-              ? <span style={{ fontSize: "11px" }}>⚠</span>
-              : <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--accent)", display: "inline-block", flexShrink: 0 }} />
-            }
-            진단권 {tickets}개
+            🏪 {tickets}/3
           </span>
           <Link
             href="/mypage"

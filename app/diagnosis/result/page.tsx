@@ -33,7 +33,7 @@ function getLeverColor(level: string) {
 export default function ResultPage() {
   return (
     <div className="app-container">
-      <Header isLoggedIn={true} tickets={0} />
+      <Header isLoggedIn={true} tickets={1} />
 
       <main style={{ padding: "20px 20px 48px" }}>
 
@@ -226,7 +226,7 @@ export default function ResultPage() {
           width: "100%", padding: "12px", color: "var(--ink-muted)", fontSize: "13px",
           fontWeight: 600, textDecoration: "none", letterSpacing: "-0.01em",
         }}>
-          다른 매장 추가 진단받기
+          + 매장 추가하기
         </Link>
 
       </main>

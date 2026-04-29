@@ -10,10 +10,13 @@ function KakaoIcon({ size = 14 }: { size?: number }) {
   );
 }
 
+const REGISTERED = 1;
+const MAX_STORES = 3;
+
 export default function MyPage() {
   return (
     <div className="app-container">
-      <Header isLoggedIn={true} tickets={0} />
+      <Header isLoggedIn={true} tickets={REGISTERED} />
 
       <main style={{ padding: "20px 20px 48px" }}>
 
@@ -27,39 +30,37 @@ export default function MyPage() {
           </p>
         </div>
 
-        {/* 진단권 현황 */}
+        {/* 내 매장 현황 카드 */}
         <div style={{
           background: "var(--bg-dark)", borderRadius: "var(--r-md)",
-          padding: "14px 16px", marginBottom: "20px",
+          padding: "16px", marginBottom: "20px",
         }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", marginBottom: "10px" }}>
-            {[
-              { label: "보유 진단권", value: "0", accent: true },
-              { label: "초대 완료", value: "0", accent: false },
-              { label: "사용한 진단", value: "1", accent: false },
-            ].map((s) => (
-              <div key={s.label} style={{
-                background: "rgba(255,255,255,0.05)", borderRadius: "var(--r-sm)",
-                padding: "10px 8px", textAlign: "center",
-              }}>
-                <p style={{ fontSize: "10px", color: "#6B6B6B", margin: "0 0 4px" }}>{s.label}</p>
-                <p style={{
-                  fontSize: "22px", fontWeight: 800, margin: 0,
-                  color: s.accent ? "var(--accent)" : "#FAFAFA",
-                  fontFamily: "var(--f-mono)",
-                }}>{s.value}</p>
-              </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
+            <p style={{ fontSize: "13px", fontWeight: 700, color: "#D4D4D8", margin: 0 }}>등록된 매장</p>
+            <span style={{
+              fontSize: "18px", fontWeight: 800, color: "var(--accent)",
+              fontFamily: "var(--f-mono)",
+            }}>{REGISTERED} / {MAX_STORES}</span>
+          </div>
+
+          {/* 슬롯 시각화 */}
+          <div style={{ display: "flex", gap: "6px", marginBottom: "12px" }}>
+            {Array.from({ length: MAX_STORES }).map((_, i) => (
+              <div key={i} style={{
+                flex: 1, height: "6px", borderRadius: "999px",
+                background: i < REGISTERED ? "var(--accent)" : "rgba(255,255,255,0.12)",
+              }} />
             ))}
           </div>
+
           <p style={{ fontSize: "11px", color: "#6B6B6B", margin: 0 }}>
-            채널 친구 유지 시 30일마다 자동 충전 ·{" "}
-            <strong style={{ color: "var(--accent)" }}>5월 28일</strong> 예정
+            남은 슬롯 <strong style={{ color: "#A3A3A3" }}>{MAX_STORES - REGISTERED}개</strong> · 친구추가 또는 초대로 추가 등록 가능
           </p>
         </div>
 
         {/* 섹션 라벨 */}
         <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          진단권 늘리기
+          매장 슬롯 늘리기
         </p>
 
         {/* 카카오 채널 친구추가 */}
@@ -73,10 +74,10 @@ export default function MyPage() {
             <span style={{
               fontSize: "11px", fontWeight: 700, color: "var(--accent)",
               background: "var(--accent-soft)", padding: "2px 7px", borderRadius: "999px",
-            }}>진단권 +1</span>
+            }}>매장 +1 등록 가능</span>
           </div>
           <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 10px", lineHeight: 1.5 }}>
-            친구 상태 유지 시 30일마다 자동 충전
+            친구 상태 유지 시 슬롯 유지
           </p>
 
           {/* 혜택 카드 */}
@@ -88,7 +89,7 @@ export default function MyPage() {
               🎁 채널 친구 전용 혜택
             </p>
             {[
-              "매월 진단권 1개 자동 충전",
+              "매장 등록 슬롯 1개 추가",
               "신규 서비스 런칭 시 최우선 안내",
               "친구 전용 특별 혜택 제공",
             ].map((item) => (
@@ -105,7 +106,7 @@ export default function MyPage() {
             borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
             border: "none", cursor: "pointer",
           }}>
-            <KakaoIcon size={14} /> 채널 친구추가하고 진단권 받기
+            <KakaoIcon size={14} /> 채널 친구추가하고 슬롯 받기
           </button>
         </div>
 
@@ -120,10 +121,10 @@ export default function MyPage() {
             <span style={{
               fontSize: "11px", fontWeight: 700, color: "var(--accent)",
               background: "var(--accent-soft)", padding: "2px 7px", borderRadius: "999px",
-            }}>진단권 +1</span>
+            }}>매장 +1 등록 가능</span>
           </div>
           <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 12px", lineHeight: 1.5 }}>
-            초대한 사장님이 진단 완료 시 자동 적립
+            초대한 사장님이 진단 완료 시 자동 적용
           </p>
           <div style={{ display: "flex", gap: "8px" }}>
             <button style={{
@@ -145,9 +146,9 @@ export default function MyPage() {
           </div>
         </div>
 
-        {/* 진단 이력 */}
+        {/* 내 매장 */}
         <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          📅 내 매장 진단 기록
+          🏪 내 매장
         </p>
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
@@ -157,7 +158,7 @@ export default function MyPage() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <p style={{ fontSize: "14px", fontWeight: 600, color: "var(--ink)", margin: "0 0 2px" }}>광장동 한미옥</p>
-              <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0 }}>4월 28일 · 5개 중 0개 인용 · 평균 23점</p>
+              <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0 }}>4월 28일 진단 · 5개 중 0개 인용 · 평균 23점</p>
             </div>
             <Link href="/diagnosis/result" style={{
               padding: "7px 12px", background: "var(--white)", color: "var(--ink)",
@@ -169,14 +170,14 @@ export default function MyPage() {
           </div>
         </div>
 
-        {/* 추가 진단받기 */}
+        {/* 매장 추가하기 */}
         <Link href="/diagnosis/input" style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
           background: "var(--accent)", color: "#fff",
           borderRadius: "var(--r-md)", padding: "15px 20px", marginTop: "16px",
           textDecoration: "none", boxShadow: "var(--sh-accent)",
         }}>
-          <p style={{ fontSize: "14px", fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>추가 진단받기</p>
+          <p style={{ fontSize: "14px", fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>+ 매장 추가하기</p>
           <span style={{ fontSize: "18px" }}>→</span>
         </Link>
 
