@@ -146,49 +146,81 @@ export default function MyPage() {
           borderRadius: "var(--r-md)", padding: "16px", marginBottom: "24px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 10px" }}>
-            🤝 분점이 있으신가요? 진단을 더 받고 싶으신가요?
+          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px", lineHeight: 1.4 }}>
+            🤝 분점이 있으신가요? 경쟁사가 궁금하신가요?
           </p>
 
+          {/* 즉시 보상 */}
           <div style={{
             background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
-            padding: "12px 14px", marginBottom: "10px",
+            padding: "12px 14px", marginBottom: "8px",
             border: "1px solid var(--border-soft)",
           }}>
-            <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 6px" }}>
-              내 초대: <strong style={{ color: "var(--ink)" }}>{INVITED}명</strong>
-            </p>
-            <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", margin: "0 0 6px" }}>
-              친구 1명 초대할 때마다 받는 혜택 (택 1):
+            <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 8px" }}>
+              친구 1명 초대 = 매번 받는 혜택 (택 1)
             </p>
             {[
               "🏪 매장 1개 추가 등록 (최대 3매장까지)",
-              "📊 이번 달 추가 진단 1회",
+              "🎯 경쟁사 1곳 심층 분석 리포트",
             ].map((item) => (
-              <div key={item} style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
-                <span style={{ fontSize: "11px", color: "var(--ink-muted)" }}>·</span>
-                <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>{item}</span>
+              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "5px" }}>
+                <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
+                <span style={{ fontSize: "12.5px", color: "var(--ink-mid)", lineHeight: 1.45 }}>{item}</span>
               </div>
             ))}
           </div>
 
+          {/* 양방향 보상 강조 */}
+          <div style={{
+            background: "#FFF4E8", border: "1px solid #FFD9AD",
+            borderRadius: "var(--r-sm)", padding: "10px 14px", marginBottom: "8px",
+          }}>
+            <p style={{ fontSize: "12.5px", fontWeight: 700, color: "#B45309", margin: 0, lineHeight: 1.5 }}>
+              🎁 친구도 가입 즉시 경쟁사 분석 1회를 받아요!
+            </p>
+          </div>
+
+          {/* 내 초대 현황 */}
+          <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 12px" }}>
+            내 초대: <strong style={{ color: "var(--ink)", fontSize: "13px" }}>{INVITED}명</strong>
+          </p>
+
+          {/* 5명 누적 보상 */}
           <div style={{
             background: "var(--bg-dark)", borderRadius: "var(--r-sm)",
-            padding: "12px 14px", marginBottom: "12px",
+            padding: "14px", marginBottom: "12px",
+            border: "1px solid rgba(255,255,255,0.06)",
           }}>
-            <p style={{ fontSize: "12px", fontWeight: 800, color: "#D4D4D8", margin: "0 0 8px" }}>
-              🏅 누적 명예 보상
-            </p>
-            {[
-              { count: "3명", badge: "추천 사장님 배지" },
-              { count: "5명", badge: "베타 앰배서더 배지" },
-              { count: "10명", badge: "마스터 사장님 배지" },
-            ].map(({ count, badge }) => (
-              <div key={count} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
-                <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--accent)", minWidth: "28px" }}>{count}</span>
-                <span style={{ fontSize: "12px", color: "#A3A3A3" }}>· {badge}</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
+              <span style={{ fontSize: "18px" }}>🏆</span>
+              <p style={{ fontSize: "13px", fontWeight: 800, color: "#FAFAFA", margin: 0 }}>
+                5명 초대 시 특별 보상
+              </p>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+              {[
+                "'베타 앰배서더' 배지",
+                "토크비 혜택 단톡방 초대",
+              ].map((item) => (
+                <div key={item} style={{ display: "flex", alignItems: "center", gap: "7px" }}>
+                  <span style={{ color: "var(--accent)", fontSize: "11px", fontWeight: 700, flexShrink: 0 }}>✓</span>
+                  <span style={{ fontSize: "12.5px", color: "#D4D4D8" }}>{item}</span>
+                </div>
+              ))}
+              <div style={{
+                marginLeft: "18px", marginTop: "2px", paddingLeft: "10px",
+                borderLeft: "2px solid rgba(255,255,255,0.1)",
+              }}>
+                {[
+                  "신규 기능 우선 알림",
+                  "베타 한정 이벤트 우선 안내",
+                  "Pro 플랜 출시 시 사전 공지",
+                  "외식업 사장님 노하우 공유",
+                ].map((sub) => (
+                  <p key={sub} style={{ fontSize: "11.5px", color: "#6B6B6B", margin: "0 0 3px" }}>· {sub}</p>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
 
           <div style={{ display: "flex", gap: "8px" }}>
