@@ -199,7 +199,7 @@ export default function ResultPage() {
         </p>
         <a
           href="/sample-guide.pdf"
-          download
+          download="TalkB_GPT최적화_컨설팅자료집.pdf"
           style={{
             display: "flex", alignItems: "center", justifyContent: "center",
             width: "100%", padding: "15px", background: "var(--accent)", color: "#FFFFFF",
