@@ -27,13 +27,13 @@ export default function Header({ isLoggedIn = false, tickets = 0 }: HeaderProps)
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      padding: "12px 20px",
+      padding: "16px 20px",
       borderBottom: "1px solid var(--border)",
       background: "var(--bg)",
       position: "sticky",
       top: 0,
       zIndex: 10,
-      paddingTop: "max(12px, env(safe-area-inset-top))",
+      paddingTop: "max(16px, env(safe-area-inset-top))",
     }}>
       <Link href={logoHref} style={{ textDecoration: "none" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -49,11 +49,18 @@ export default function Header({ isLoggedIn = false, tickets = 0 }: HeaderProps)
       {isLoggedIn ? (
         <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
           <span style={{
-            fontSize: "12px", fontWeight: 700, color: "#fff",
-            background: tickets === 0 ? "#EF4444" : "var(--accent)",
-            padding: "5px 10px", borderRadius: "999px",
-            whiteSpace: "nowrap",
+            display: "inline-flex", alignItems: "center", gap: "5px",
+            fontSize: "13px", fontWeight: 800, color: tickets === 0 ? "#fff" : "var(--accent)",
+            background: tickets === 0 ? "#EF4444" : "var(--accent-soft)",
+            padding: "6px 12px", borderRadius: "999px",
+            whiteSpace: "nowrap", letterSpacing: "-0.01em",
+            border: tickets === 0 ? "none" : "1px solid rgba(232,93,58,0.25)",
+            boxShadow: tickets === 0 ? "0 1px 4px rgba(239,68,68,0.3)" : "none",
           }}>
+            {tickets === 0
+              ? <span style={{ fontSize: "11px" }}>⚠</span>
+              : <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--accent)", display: "inline-block", flexShrink: 0 }} />
+            }
             진단권 {tickets}개
           </span>
           <Link

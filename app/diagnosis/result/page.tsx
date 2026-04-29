@@ -48,16 +48,16 @@ export default function ResultPage() {
         {/* 카카오 알림톡 안내 배너 */}
         <div style={{
           display: "flex", alignItems: "center", gap: "12px",
-          background: "#FEF7E0", borderRadius: "var(--r-md)",
+          background: "#F5F0E8", borderRadius: "var(--r-md)",
           padding: "12px 14px", marginBottom: "16px",
-          border: "1px solid #FAE29A",
+          border: "1px solid #E8E0D0",
         }}>
-          <span style={{ fontSize: "20px", flexShrink: 0 }}>📨</span>
+          <span style={{ fontSize: "18px", flexShrink: 0 }}>📨</span>
           <div>
-            <p style={{ fontSize: "13px", fontWeight: 700, color: "#78501A", margin: "0 0 2px" }}>
+            <p style={{ fontSize: "13px", fontWeight: 700, color: "#4A3F2F", margin: "0 0 2px" }}>
               카카오톡으로도 결과를 보내드렸어요
             </p>
-            <p style={{ fontSize: "12px", color: "#A06A28", margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: "12px", color: "#7A6A55", margin: 0, lineHeight: 1.5 }}>
               언제든 알림톡으로 다시 확인하실 수 있어요
             </p>
           </div>
