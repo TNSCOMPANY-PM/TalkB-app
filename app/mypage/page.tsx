@@ -12,6 +12,7 @@ function KakaoIcon({ size = 14 }: { size?: number }) {
 
 const REGISTERED = 1;
 const MAX_STORES = 3;
+const INVITED = 0;
 
 export default function MyPage() {
   return (
@@ -37,13 +38,10 @@ export default function MyPage() {
         }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
             <p style={{ fontSize: "13px", fontWeight: 700, color: "#D4D4D8", margin: 0 }}>등록된 매장</p>
-            <span style={{
-              fontSize: "18px", fontWeight: 800, color: "var(--accent)",
-              fontFamily: "var(--f-mono)",
-            }}>{REGISTERED} / {MAX_STORES}</span>
+            <span style={{ fontSize: "18px", fontWeight: 800, color: "var(--accent)", fontFamily: "var(--f-mono)" }}>
+              {REGISTERED} / {MAX_STORES}
+            </span>
           </div>
-
-          {/* 슬롯 시각화 */}
           <div style={{ display: "flex", gap: "6px", marginBottom: "12px" }}>
             {Array.from({ length: MAX_STORES }).map((_, i) => (
               <div key={i} style={{
@@ -52,7 +50,6 @@ export default function MyPage() {
               }} />
             ))}
           </div>
-
           <p style={{ fontSize: "11px", color: "#6B6B6B", margin: 0 }}>
             남은 슬롯 <strong style={{ color: "#A3A3A3" }}>{MAX_STORES - REGISTERED}개</strong> · 친구추가 또는 초대로 추가 등록 가능
           </p>
@@ -80,18 +77,17 @@ export default function MyPage() {
             친구 상태 유지 시 슬롯 유지
           </p>
 
-          {/* 혜택 카드 */}
           <div style={{
-            background: "#FBF8F2", border: "1px solid #EDE8DC",
+            background: "#F5F0E8", border: "1px solid #E8E0D0",
             borderRadius: "var(--r-sm)", padding: "12px 14px", marginBottom: "10px",
           }}>
             <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 8px" }}>
               🎁 채널 친구 전용 혜택
             </p>
             {[
-              "매장 등록 슬롯 1개 추가",
-              "신규 서비스 런칭 시 최우선 안내",
-              "친구 전용 특별 혜택 제공",
+              "매월 자동 진단 + 리포트 발송",
+              "친구 상태 유지 시 30일마다 갱신",
+              "신규 서비스 우선 안내",
             ].map((item) => (
               <div key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
                 <span style={{ color: "var(--success)", fontSize: "12px", fontWeight: 700, flexShrink: 0 }}>✓</span>
@@ -106,7 +102,7 @@ export default function MyPage() {
             borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
             border: "none", cursor: "pointer",
           }}>
-            <KakaoIcon size={14} /> 채널 친구추가하고 슬롯 받기
+            <KakaoIcon size={14} /> 채널 친구추가하고 매월 리포트 받기
           </button>
         </div>
 
@@ -116,16 +112,55 @@ export default function MyPage() {
           borderRadius: "var(--r-md)", padding: "16px", marginBottom: "24px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
-            <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>주변 사장님 초대하기</p>
-            <span style={{
-              fontSize: "11px", fontWeight: 700, color: "var(--accent)",
-              background: "var(--accent-soft)", padding: "2px 7px", borderRadius: "999px",
-            }}>매장 +1 등록 가능</span>
-          </div>
-          <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 12px", lineHeight: 1.5 }}>
-            초대한 사장님이 진단 완료 시 자동 적용
+          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px" }}>
+            🤝 함께 성공하고 싶은 사장님 초대하기
           </p>
+
+          {/* 내 초대 현황 */}
+          <div style={{
+            background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
+            padding: "12px 14px", marginBottom: "10px",
+            border: "1px solid var(--border-soft)",
+          }}>
+            <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink-mid)", margin: "0 0 8px" }}>
+              내 초대: <strong style={{ color: "var(--ink)", fontSize: "14px" }}>{INVITED}명</strong>
+            </p>
+            <p style={{ fontSize: "11.5px", fontWeight: 700, color: "var(--ink)", margin: "0 0 6px" }}>
+              초대 1명당 받는 혜택 (택 1)
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {[
+                "매장 1개 추가 등록",
+                "이번 달 진단 1회 추가",
+              ].map((item) => (
+                <div key={item} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span style={{ fontSize: "11px", color: "var(--ink-muted)" }}>○</span>
+                  <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 명예 보상 */}
+          <div style={{
+            background: "var(--bg-dark)", borderRadius: "var(--r-sm)",
+            padding: "12px 14px", marginBottom: "12px",
+          }}>
+            <p style={{ fontSize: "12px", fontWeight: 800, color: "#D4D4D8", margin: "0 0 8px" }}>
+              🏅 누적 명예 보상
+            </p>
+            {[
+              { count: "3명", badge: "추천 사장님 배지" },
+              { count: "5명", badge: "베타 앰배서더 배지" },
+              { count: "10명", badge: "마스터 사장님 배지" },
+            ].map(({ count, badge }) => (
+              <div key={count} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
+                <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--accent)", minWidth: "28px" }}>{count}</span>
+                <span style={{ fontSize: "12px", color: "#A3A3A3" }}>· {badge}</span>
+              </div>
+            ))}
+          </div>
+
           <div style={{ display: "flex", gap: "8px" }}>
             <button style={{
               flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "5px",
@@ -146,9 +181,9 @@ export default function MyPage() {
           </div>
         </div>
 
-        {/* 내 매장 */}
+        {/* 내 매장 진단 기록 */}
         <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          🏪 내 매장
+          📅 내 매장 진단 기록
         </p>
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
@@ -157,13 +192,14 @@ export default function MyPage() {
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
-              <p style={{ fontSize: "14px", fontWeight: 600, color: "var(--ink)", margin: "0 0 2px" }}>광장동 한미옥</p>
-              <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0 }}>4월 28일 진단 · 5개 중 0개 인용 · 평균 23점</p>
+              <p style={{ fontSize: "15px", fontWeight: 700, color: "var(--ink)", margin: "0 0 3px" }}>광장동 한미옥</p>
+              <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 3px" }}>4월 28일 진단 · 5개 중 0개 인용 · 평균 23점</p>
+              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 600, margin: 0 }}>다음 진단 예정: 5월 28일</p>
             </div>
             <Link href="/diagnosis/result" style={{
               padding: "7px 12px", background: "var(--white)", color: "var(--ink)",
               borderRadius: "var(--r-sm)", fontSize: "12px", fontWeight: 700,
-              border: "1px solid var(--border)", textDecoration: "none", whiteSpace: "nowrap",
+              border: "1px solid var(--border)", textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0,
             }}>
               결과 보기
             </Link>
