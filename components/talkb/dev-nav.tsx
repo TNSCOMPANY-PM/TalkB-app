@@ -10,8 +10,7 @@ const screens = [
   { label: "4. 매칭", href: "/diagnosis/match" },
   { label: "5. 측정", href: "/diagnosis/measuring" },
   { label: "6. 결과", href: "/diagnosis/result" },
-  { label: "7. 발송완료", href: "/diagnosis/complete" },
-  { label: "8. 마이페이지", href: "/mypage" },
+  { label: "7. 마이페이지", href: "/mypage" },
 ];
 
 export default function DevNav() {

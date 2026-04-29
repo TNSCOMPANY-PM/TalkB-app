@@ -181,30 +181,6 @@ export default function MyPage() {
           <span style={{ fontSize: "18px" }}>→</span>
         </Link>
 
-        {/* AI 솔루션 */}
-        <div style={{
-          background: "var(--bg-dark)", borderRadius: "var(--r-md)",
-          padding: "16px", marginBottom: "16px",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-            <p style={{ fontSize: "14px", fontWeight: 800, color: "#FAFAFA", margin: 0 }}>AI 최적화 솔루션</p>
-            <span style={{ fontSize: "10px", fontWeight: 700, color: "var(--accent)", background: "rgba(232,93,58,0.15)", padding: "2px 8px", borderRadius: "999px" }}>
-              5월 출시 예정
-            </span>
-          </div>
-          <p style={{ fontSize: "12px", color: "#A3A3A3", margin: "0 0 12px", lineHeight: 1.55 }}>
-            전문팀이 직접 사장님 매장 AI 노출을 관리합니다. 채널 친구추가 시 얼리버드 30% 할인.
-          </p>
-          <a href="https://talkb.co.kr" style={{
-            display: "flex", alignItems: "center", justifyContent: "center",
-            width: "100%", padding: "11px", background: "rgba(255,255,255,0.08)",
-            color: "#FAFAFA", borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
-            border: "1px solid rgba(255,255,255,0.12)", textDecoration: "none",
-          }}>
-            서비스 알아보기 →
-          </a>
-        </div>
-
         <Link href="/" style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           width: "100%", padding: "12px", color: "var(--ink-muted)", fontSize: "13px",
