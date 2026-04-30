@@ -36,8 +36,25 @@ export default function LoginPage() {
             카카오로 시작하기
           </Link>
 
-          <p style={{ textAlign: "center", fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 32px" }}>
+          <p style={{ textAlign: "center", fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 16px" }}>
             30초 안에 결과 확인 · 별도 회원가입 없음
+          </p>
+
+          <p style={{
+            textAlign: "center", fontSize: "11.5px", color: "var(--ink-muted)",
+            lineHeight: 1.65, margin: "0 0 32px",
+          }}>
+            시작하기를 누르면 토크비의{" "}
+            <a href="/terms" target="_blank" rel="noopener noreferrer"
+              style={{ color: "var(--ink-mid)", fontWeight: 700, textDecoration: "underline" }}>
+              이용약관
+            </a>
+            {" "}및{" "}
+            <a href="/privacy" target="_blank" rel="noopener noreferrer"
+              style={{ color: "var(--ink-mid)", fontWeight: 700, textDecoration: "underline" }}>
+              개인정보처리방침
+            </a>
+            에 동의한 것으로 간주합니다.
           </p>
 
           <Link href="/" style={{
