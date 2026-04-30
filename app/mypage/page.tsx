@@ -1,302 +1,374 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Header from "@/components/talkb/header";
 import Footer from "@/components/talkb/footer";
 import PwaBanner from "@/components/talkb/pwa-banner";
 
-function KakaoIcon({ size = 14 }: { size?: number }) {
+// ── Mock 데이터 (동균팀장 Supabase 연동 시 교체) ────────────
+const MOCK_STORE = {
+  name: "한미옥 광장점",
+  address: "서울 광진구 광장동",
+  category: "한정식",
+  registeredAt: "2026.04.27",
+};
+
+const MOCK_TICKETS = 1; // 진단권 보유 수
+
+const MOCK_LAST_DIAGNOSIS = {
+  date: "2026-04-27",
+  answeredCount: 1,
+  totalCount: 5,
+};
+
+const REGISTERED_COUNT = 1; // 등록 매장 수 (1 | 2 | 3)
+
+// ── 유틸 함수 ────────────────────────────────────────────────
+function getNextDiagnosisDate(): string {
+  const now = new Date();
+  const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  return next.toLocaleDateString("ko-KR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function getRelativeDays(dateStr: string): string {
+  const days = Math.floor(
+    (Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24)
+  );
+  if (days === 0) return "오늘";
+  if (days === 1) return "어제";
+  return `${days}일 전`;
+}
+
+// ── 섹션 라벨 ────────────────────────────────────────────────
+function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 18 18" fill="currentColor">
-      <path d="M9 1C4.582 1 1 3.694 1 7.018c0 2.116 1.435 3.973 3.6 5.034l-.728 2.649c-.06.218.18.39.366.262L7.41 12.83C7.93 12.92 8.46 13 9 13c4.418 0 8-2.694 8-6.018C17 3.694 13.418 1 9 1z" />
-    </svg>
+    <p style={{
+      fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)",
+      margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em",
+    }}>
+      {children}
+    </p>
   );
 }
 
-const REGISTERED: number = 1;
-const INVITED: number = 0;
-
-const stores = [
-  { name: "광장동 한미옥", date: "4월 28일", cited: 0, score: 23, nextDiagnosis: "5월 28일" },
-];
-
 export default function MyPage() {
+  const router = useRouter();
+  const [editToast, setEditToast] = useState(false);
+
+  const handleEditStore = () => {
+    setEditToast(true);
+    setTimeout(() => setEditToast(false), 2500);
+  };
+
+  const nextDiagDate = getNextDiagnosisDate();
+  const relDays = getRelativeDays(MOCK_LAST_DIAGNOSIS.date);
+  const diagPct = Math.round(
+    (MOCK_LAST_DIAGNOSIS.answeredCount / MOCK_LAST_DIAGNOSIS.totalCount) * 100
+  );
+
   return (
     <div className="app-container">
-      <Header isLoggedIn={true} stores={stores} />
+      <Header isLoggedIn={true} stores={[{ name: MOCK_STORE.name }]} />
 
       <main style={{ padding: "20px 20px 48px" }}>
 
-        {/* 사장님 요약 */}
-        <div style={{ marginBottom: "20px" }}>
-          <h1 style={{ fontSize: "22px", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 4px", color: "var(--ink)" }}>
-            📋 내 매장 개선 노트
+        {/* ─── 페이지 타이틀 ──────────────────────────────── */}
+        <div style={{ marginBottom: "24px" }}>
+          <h1 style={{
+            fontSize: "22px", fontWeight: 800, letterSpacing: "-0.03em",
+            margin: "0 0 4px", color: "var(--ink)",
+          }}>
+            📋 내 매장 관리
           </h1>
           <p style={{ fontSize: "14px", fontWeight: 600, color: "var(--ink-mid)", margin: 0 }}>
-            광장동 한미옥 사장님
+            {MOCK_STORE.name} 사장님
           </p>
         </div>
 
-        {/* 🏪 운영 중인 매장 */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-          <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-            {REGISTERED === 1 ? "🏪 운영 중인 매장" : `🏪 내 매장 (${REGISTERED}개)`}
-          </p>
-          <span style={{
-            fontSize: "11px", fontWeight: 600, color: "var(--ink-mid)",
-            background: "var(--bg-deep)", padding: "3px 9px", borderRadius: "999px",
-            border: "1px solid var(--border)",
-          }}>
-            Free 플랜 · {REGISTERED}개 운영
-          </span>
-        </div>
+        {/* ─── [1] 매장 정보 카드 ────────────────────────── */}
+        <SectionLabel>🏪 운영 중인 매장</SectionLabel>
 
-        {stores.map((store) => (
-          <div key={store.name} style={{
-            background: "var(--white)", border: "1px solid var(--border)",
-            borderRadius: "var(--r-md)", padding: "14px 16px", marginBottom: "8px",
-            boxShadow: "var(--sh-sm)",
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-              <div>
-                <p style={{ fontSize: "15px", fontWeight: 700, color: "var(--ink)", margin: "0 0 3px" }}>{store.name}</p>
-                <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 3px" }}>
-                  {store.date} 진단 · 5개 중 {store.cited}개 인용 · 평균 {store.score}점
-                </p>
-                <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 600, margin: 0 }}>
-                  다음 진단 예정: {store.nextDiagnosis}
-                </p>
-              </div>
-              <Link href="/diagnosis/result" style={{
-                padding: "7px 12px", background: "var(--white)", color: "var(--ink)",
-                borderRadius: "var(--r-sm)", fontSize: "12px", fontWeight: 700,
-                border: "1px solid var(--border)", textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0,
-              }}>
-                결과 보기
-              </Link>
-            </div>
-          </div>
-        ))}
-
-        {REGISTERED === 2 && (
-          <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "4px 0 0", textAlign: "center" }}>
-            💡 1명 더 초대하면 매장 1개 추가 등록 가능
-          </p>
-        )}
-
-        <div style={{ height: "24px" }} />
-
-        {/* PWA 설치 배너 (미설치 모바일 사용자) */}
-        <PwaBanner />
-
-        {/* 섹션 라벨 */}
-        <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          매장 추가 등록
-        </p>
-
-        {/* 카카오 채널 친구추가 */}
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
           borderRadius: "var(--r-md)", padding: "16px", marginBottom: "8px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: "4px" }}>
-            <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>카카오 채널 친구추가</p>
+          {/* 매장명 + 수정 버튼 */}
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "8px", marginBottom: "12px" }}>
+            <p style={{ fontSize: "17px", fontWeight: 800, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
+              🏪 {MOCK_STORE.name}
+            </p>
+            <button
+              onClick={handleEditStore}
+              style={{
+                padding: "5px 10px", background: "var(--bg-deep)",
+                color: "var(--ink-mid)", borderRadius: "var(--r-sm)",
+                fontSize: "11px", fontWeight: 700,
+                border: "1px solid var(--border)", cursor: "pointer",
+                whiteSpace: "nowrap", flexShrink: 0,
+              }}
+            >
+              수정
+            </button>
           </div>
-          <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 10px", lineHeight: 1.5 }}>
-            친구 상태 유지 시 등록 유지
+
+          {/* 매장 정보 */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "13px", color: "var(--ink-muted)", flexShrink: 0 }}>📍</span>
+              <span style={{ fontSize: "13px", color: "var(--ink-mid)" }}>{MOCK_STORE.address}</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "13px", color: "var(--ink-muted)", flexShrink: 0 }}>🏷️</span>
+              <span style={{ fontSize: "13px", color: "var(--ink-mid)" }}>{MOCK_STORE.category}</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "13px", color: "var(--ink-muted)", flexShrink: 0 }}>📅</span>
+              <span style={{ fontSize: "13px", color: "var(--ink-muted)" }}>등록일 {MOCK_STORE.registeredAt}</span>
+            </div>
+          </div>
+
+          {/* 수정 준비 중 토스트 */}
+          {editToast && (
+            <div style={{
+              marginTop: "12px", padding: "10px 12px",
+              background: "var(--bg-soft)", border: "1px solid var(--border)",
+              borderRadius: "var(--r-sm)",
+            }}>
+              <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: 0 }}>
+                ⚙️ 매장 정보 수정은 정식 출시 후 지원될 예정이에요.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* 매장 추가 버튼 (1~2개 등록 시) */}
+        {REGISTERED_COUNT < 3 ? (
+          <Link
+            href="/diagnosis/input"
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              padding: "11px", marginBottom: "28px",
+              background: "var(--bg-soft)", border: "1px dashed var(--border)",
+              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
+              color: "var(--ink-mid)", textDecoration: "none",
+            }}
+          >
+            + 매장 추가하기 (최대 3개)
+          </Link>
+        ) : (
+          <div style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: "11px", marginBottom: "28px",
+            background: "var(--bg-soft)", border: "1px dashed var(--border)",
+            borderRadius: "var(--r-sm)",
+          }}>
+            <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0 }}>
+              최대 매장 수(3개)에 도달했어요
+            </p>
+          </div>
+        )}
+
+        {/* ─── [2] 카카오톡 채널 placeholder ────────────── */}
+        <SectionLabel>📢 카카오톡 채널 구독</SectionLabel>
+
+        <div style={{
+          background: "#111108", border: "1px solid #4A4200",
+          borderRadius: "var(--r-md)", padding: "18px 16px", marginBottom: "28px",
+        }}>
+          <p style={{
+            fontSize: "14px", fontWeight: 800, color: "#FEE500",
+            margin: "0 0 4px", letterSpacing: "-0.02em",
+          }}>
+            🔔 토크비 채널 구독
+          </p>
+          <p style={{ fontSize: "12px", color: "#6B6B6B", margin: "0 0 14px", lineHeight: 1.6 }}>
+            곧 토크비 카카오톡 채널이 오픈됩니다.<br />
+            채널 구독 시 매월 자동 진단 결과를 받아보실 수 있어요.
           </p>
 
+          {/* 혜택 미리보기 */}
           <div style={{
-            background: "#F5F0E8", border: "1px solid #E8E0D0",
-            borderRadius: "var(--r-sm)", padding: "12px 14px", marginBottom: "10px",
+            background: "rgba(254,229,0,0.06)", border: "1px solid rgba(254,229,0,0.15)",
+            borderRadius: "var(--r-sm)", padding: "10px 12px", marginBottom: "14px",
           }}>
-            <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 8px" }}>
-              🎁 채널 친구 전용 혜택
-            </p>
             {[
-              "매월 자동 진단 + 리포트 발송",
-              "친구 상태 유지 시 30일마다 갱신",
-              "신규 서비스 우선 안내",
+              "매월 GPT 노출 변화 자동 추적",
+              "카카오톡으로 진단 결과 자동 발송",
+              "구독 유지 시 영구 무료",
             ].map((item) => (
-              <div key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
-                <span style={{ color: "var(--success)", fontSize: "12px", fontWeight: 700, flexShrink: 0 }}>✓</span>
-                <span style={{ fontSize: "12.5px", color: "var(--ink-mid)" }}>{item}</span>
+              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "5px" }}>
+                <span style={{ color: "#FEE500", fontWeight: 700, fontSize: "11px", flexShrink: 0, marginTop: "2px" }}>✓</span>
+                <span style={{ fontSize: "12px", color: "#A3A3A3" }}>{item}</span>
               </div>
             ))}
           </div>
 
-          <button style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
-            width: "100%", padding: "13px", background: "var(--kakao)", color: "var(--kakao-text)",
-            borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
-            border: "none", cursor: "pointer",
-          }}>
-            <KakaoIcon size={14} /> 채널 친구추가하고 매월 리포트 받기
+          <button
+            disabled
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              width: "100%", padding: "13px",
+              background: "#2A2A00", color: "#6B6B00",
+              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 800,
+              border: "1px solid #3A3A00", cursor: "not-allowed",
+            }}
+          >
+            곧 출시 · 준비 중
           </button>
         </div>
 
-        {/* 초대하기 */}
+        {/* ─── [3] 진단권 + 다시 진단 카드 ──────────────── */}
+        <SectionLabel>🎫 진단권</SectionLabel>
+
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
-          borderRadius: "var(--r-md)", padding: "16px", marginBottom: "24px",
+          borderRadius: "var(--r-md)", padding: "16px", marginBottom: "28px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px", lineHeight: 1.55 }}>
-            🎉 다른 매장도 진단받고 싶으신가요?<br />
-            GPT 노출 변화를 빨리 확인하고 싶으신가요?
-          </p>
+          {/* 보유 진단권 */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
+            <div>
+              <p style={{ fontSize: "15px", fontWeight: 800, color: "var(--ink)", margin: "0 0 3px" }}>
+                🎫 진단권{" "}
+                <span style={{
+                  color: MOCK_TICKETS > 0 ? "var(--accent)" : "var(--ink-muted)",
+                  fontFamily: "var(--f-mono)",
+                }}>
+                  {MOCK_TICKETS}개
+                </span>{" "}
+                보유
+              </p>
+              <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0 }}>
+                친구 초대로 진단권 추가 가능
+              </p>
+            </div>
+            {MOCK_TICKETS > 0 && (
+              <span style={{
+                fontSize: "10px", fontWeight: 700, color: "var(--success)",
+                background: "rgba(22,163,74,0.1)", padding: "3px 8px",
+                borderRadius: "999px", border: "1px solid rgba(22,163,74,0.2)",
+              }}>
+                사용 가능
+              </span>
+            )}
+          </div>
 
-          {/* 즉시 보상 */}
+          {/* 다음 자동 진단 */}
           <div style={{
             background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
-            padding: "12px 14px", marginBottom: "8px",
+            padding: "10px 12px", marginBottom: "14px",
             border: "1px solid var(--border-soft)",
           }}>
-            <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 8px" }}>
-              친구 1명 초대 = 매번 받는 혜택 (택 1)
+            <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: "0 0 3px", fontWeight: 600 }}>
+              다음 자동 진단
             </p>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "5px" }}>
-              <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
-              <span style={{ fontSize: "12.5px", color: "var(--ink-mid)", lineHeight: 1.45 }}>🏪 매장 1개 추가 등록 (최대 3매장까지)</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "2px" }}>
-              <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
-              <span style={{ fontSize: "12.5px", color: "var(--ink-mid)", lineHeight: 1.45 }}>🎫 진단권 1개 추가 (월 최대 5개)</span>
-            </div>
-            <div style={{
-              marginLeft: "14px", marginTop: "6px",
-              paddingLeft: "10px", borderLeft: "2px solid var(--border)",
-            }}>
-              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 700, margin: "0 0 2px" }}>
-                → 매월 자동 진단을 기다리지 않고
-              </p>
-              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 700, margin: "0 0 6px" }}>
-                &nbsp;&nbsp;&nbsp;원할 때 즉시 다시 진단받기!
-              </p>
-              <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: 0 }}>
-                진단권으로 미션 완료 후 GPT 노출 변화를 즉시 확인하세요
-              </p>
-            </div>
-          </div>
-
-          {/* 양방향 보상 강조 */}
-          <div style={{
-            background: "#FFF4E8", border: "1px solid #FFD9AD",
-            borderRadius: "var(--r-sm)", padding: "10px 14px", marginBottom: "8px",
-          }}>
-            <p style={{ fontSize: "12.5px", fontWeight: 700, color: "#B45309", margin: 0, lineHeight: 1.5 }}>
-              🎁 친구도 가입 즉시 경쟁사 분석 1회를 받아요!
+            <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
+              📅 {nextDiagDate}
             </p>
           </div>
 
-          {/* 내 초대 현황 */}
-          <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 12px" }}>
-            내 초대: <strong style={{ color: "var(--ink)", fontSize: "13px" }}>{INVITED}명</strong>
-          </p>
-
-          {/* 5명 누적 보상 */}
-          <div style={{
-            background: "var(--bg-dark)", borderRadius: "var(--r-sm)",
-            padding: "14px", marginBottom: "12px",
-            border: "1px solid rgba(255,255,255,0.06)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
-              <span style={{ fontSize: "18px" }}>🏆</span>
-              <p style={{ fontSize: "13px", fontWeight: 800, color: "#FAFAFA", margin: 0 }}>
-                5명 초대 시 특별 보상
+          {/* 다시 진단받기 버튼 */}
+          {MOCK_TICKETS > 0 ? (
+            <button
+              onClick={() => router.push("/diagnosis/input")}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
+                width: "100%", padding: "13px", background: "var(--accent)", color: "#FFFFFF",
+                borderRadius: "var(--r-sm)", fontSize: "14px", fontWeight: 800,
+                border: "none", cursor: "pointer",
+              }}
+            >
+              ⚡ 지금 다시 진단받기
+            </button>
+          ) : (
+            <div>
+              <button
+                disabled
+                style={{
+                  width: "100%", padding: "13px", background: "var(--bg-deep)", color: "var(--ink-muted)",
+                  borderRadius: "var(--r-sm)", fontSize: "14px", fontWeight: 800,
+                  border: "1px solid var(--border)", cursor: "not-allowed", marginBottom: "8px",
+                }}
+              >
+                ⚡ 지금 다시 진단받기
+              </button>
+              <p style={{ fontSize: "12px", color: "var(--ink-muted)", textAlign: "center", margin: 0 }}>
+                진단권이 없어요.{" "}
+                <span style={{ color: "var(--accent)", fontWeight: 700 }}>친구 초대하고 진단권 받기 →</span>
               </p>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-              {[
-                "'베타 앰배서더' 배지",
-                "토크비 혜택 단톡방 초대",
-              ].map((item) => (
-                <div key={item} style={{ display: "flex", alignItems: "center", gap: "7px" }}>
-                  <span style={{ color: "var(--accent)", fontSize: "11px", fontWeight: 700, flexShrink: 0 }}>✓</span>
-                  <span style={{ fontSize: "12.5px", color: "#D4D4D8" }}>{item}</span>
-                </div>
-              ))}
-              <div style={{
-                marginLeft: "18px", marginTop: "2px", paddingLeft: "10px",
-                borderLeft: "2px solid rgba(255,255,255,0.1)",
-              }}>
-                {[
-                  "신규 기능 우선 알림",
-                  "베타 한정 이벤트 우선 안내",
-                  "Pro 플랜 출시 시 사전 공지",
-                  "외식업 사장님 노하우 공유",
-                ].map((sub) => (
-                  <p key={sub} style={{ fontSize: "11.5px", color: "#6B6B6B", margin: "0 0 3px" }}>· {sub}</p>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "5px",
-              padding: "12px", background: "var(--bg-deep)", color: "var(--ink)",
-              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
-              border: "1px solid var(--border)", cursor: "pointer",
-            }}>
-              🔗 링크 복사
-            </button>
-            <button style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "5px",
-              padding: "12px", background: "var(--kakao)", color: "var(--kakao-text)",
-              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
-              border: "none", cursor: "pointer",
-            }}>
-              <KakaoIcon size={13} /> 카카오톡 공유
-            </button>
-          </div>
+          )}
         </div>
 
-        {/* 매장 추가하기 */}
-        <Link href="/diagnosis/input" style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          background: "var(--accent)", color: "#fff",
-          borderRadius: "var(--r-md)", padding: "15px 20px",
-          textDecoration: "none", boxShadow: "var(--sh-accent)",
-        }}>
-          <p style={{ fontSize: "14px", fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>+ 매장 추가하기</p>
-          <span style={{ fontSize: "18px" }}>→</span>
-        </Link>
+        {/* ─── [4] 최근 진단 결과 카드 ───────────────────── */}
+        <SectionLabel>📊 최근 진단 결과</SectionLabel>
 
-        <div style={{ height: "28px" }} />
-
-        {/* Pro 플랜 사전 등록 */}
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
-          borderRadius: "var(--r-md)", padding: "18px 16px",
+          borderRadius: "var(--r-md)", padding: "16px", marginBottom: "28px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-            <span style={{ fontSize: "16px" }}>⭐</span>
-            <p style={{ fontSize: "14px", fontWeight: 800, color: "var(--ink)", margin: 0 }}>Pro 플랜 준비 중</p>
-            <span style={{
-              fontSize: "10px", fontWeight: 700, color: "var(--accent)",
-              background: "var(--accent-soft)", padding: "2px 8px", borderRadius: "999px",
-              border: "1px solid rgba(232,93,58,0.2)", marginLeft: "auto",
-            }}>Coming Soon</span>
+          {/* 날짜 */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
+            <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
+              GPT 노출 진단
+            </p>
+            <span style={{ fontSize: "12px", color: "var(--ink-muted)" }}>
+              {MOCK_LAST_DIAGNOSIS.date.replace(/-/g, ".")} ({relDays})
+            </span>
           </div>
-          {[
-            "매장 무제한 등록",
-            "데이터 정밀 분석 리포트",
-            "전담 우선 지원",
-          ].map((item) => (
-            <div key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "7px" }}>
-              <span style={{ color: "var(--accent)", fontSize: "12px", fontWeight: 700, flexShrink: 0 }}>✓</span>
-              <span style={{ fontSize: "13px", color: "var(--ink-mid)" }}>{item}</span>
+
+          {/* 답변 수 + 진행바 */}
+          <div style={{ marginBottom: "14px" }}>
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "8px" }}>
+              <p style={{ fontSize: "13px", color: "var(--ink-mid)", margin: 0 }}>
+                5개 질문 중{" "}
+                <strong style={{ color: "var(--ink)", fontSize: "15px" }}>
+                  {MOCK_LAST_DIAGNOSIS.answeredCount}개
+                </strong>{" "}
+                답변
+              </p>
+              <span style={{
+                fontSize: "13px", fontWeight: 700, color: "var(--accent)",
+                fontFamily: "var(--f-mono)",
+              }}>
+                {MOCK_LAST_DIAGNOSIS.answeredCount}/{MOCK_LAST_DIAGNOSIS.totalCount}
+              </span>
             </div>
-          ))}
-          <button style={{
-            width: "100%", padding: "12px", background: "var(--bg-dark)", color: "#FAFAFA",
-            borderRadius: "var(--r-md)", fontSize: "14px", fontWeight: 700,
-            border: "1px solid rgba(255,255,255,0.08)", cursor: "pointer", marginTop: "8px",
-          }}>
-            Pro 플랜 출시 알림 받기
-          </button>
+            <div style={{
+              height: "8px", background: "var(--bg-deep)",
+              borderRadius: "999px", overflow: "hidden",
+            }}>
+              <div style={{
+                height: "100%", background: "var(--accent)", borderRadius: "999px",
+                width: `${diagPct}%`, transition: "width 0.4s ease",
+              }} />
+            </div>
+          </div>
+
+          {/* 결과 보기 버튼 */}
+          <Link
+            href="/diagnosis/result"
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              padding: "12px", background: "var(--bg-soft)", color: "var(--ink)",
+              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
+              border: "1px solid var(--border)", textDecoration: "none",
+            }}
+          >
+            전체 결과 보기 →
+          </Link>
         </div>
+
+        {/* ─── PWA 설치 배너 ──────────────────────────────── */}
+        <PwaBanner />
 
       </main>
 
