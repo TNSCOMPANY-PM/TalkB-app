@@ -174,7 +174,7 @@ export default function MyPage() {
             href="/diagnosis/input"
             style={{
               display: "flex", alignItems: "center", justifyContent: "center",
-              padding: "11px", marginBottom: "28px",
+              padding: "13px", marginBottom: "28px", minHeight: "48px",
               background: "var(--bg-soft)", border: "1px dashed var(--border)",
               borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
               color: "var(--ink-mid)", textDecoration: "none",
@@ -185,7 +185,7 @@ export default function MyPage() {
         ) : (
           <div style={{
             display: "flex", alignItems: "center", justifyContent: "center",
-            padding: "11px", marginBottom: "28px",
+            padding: "13px", marginBottom: "28px", minHeight: "48px",
             background: "var(--bg-soft)", border: "1px dashed var(--border)",
             borderRadius: "var(--r-sm)",
           }}>
@@ -208,7 +208,7 @@ export default function MyPage() {
           }}>
             🔔 토크비 채널 구독
           </p>
-          <p style={{ fontSize: "12px", color: "#6B6B6B", margin: "0 0 14px", lineHeight: 1.6 }}>
+          <p style={{ fontSize: "12px", color: "#A3A3A3", margin: "0 0 14px", lineHeight: 1.6 }}>
             곧 토크비 카카오톡 채널이 오픈됩니다.<br />
             채널 구독 시 매월 자동 진단 결과를 받아보실 수 있어요.
           </p>
@@ -222,10 +222,10 @@ export default function MyPage() {
               "매월 GPT 노출 변화 자동 추적",
               "카카오톡으로 진단 결과 자동 발송",
               "구독 유지 시 영구 무료",
-            ].map((item) => (
-              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "5px" }}>
+            ].map((item, i, arr) => (
+              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: i < arr.length - 1 ? "6px" : 0 }}>
                 <span style={{ color: "#FEE500", fontWeight: 700, fontSize: "11px", flexShrink: 0, marginTop: "2px" }}>✓</span>
-                <span style={{ fontSize: "12px", color: "#A3A3A3" }}>{item}</span>
+                <span style={{ fontSize: "12px", color: "#C4C4CC" }}>{item}</span>
               </div>
             ))}
           </div>
@@ -431,22 +431,26 @@ export default function MyPage() {
 
               return (
                 <div key={cat.id}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "5px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                      <span style={{ fontSize: "12px", color: "var(--ink-muted)" }}>{numeral}</span>
-                      <span style={{ fontSize: "12.5px", fontWeight: 600, color: "var(--ink)" }}>{cat.name}</span>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", marginBottom: "5px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "5px", minWidth: 0, flex: 1 }}>
+                      <span style={{ fontSize: "12px", color: "var(--ink-muted)", flexShrink: 0 }}>{numeral}</span>
+                      <span style={{
+                        fontSize: "12.5px", fontWeight: 600, color: "var(--ink)",
+                        whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                      }}>{cat.name}</span>
                       {cat.importance === 3 && (
                         <span style={{
                           fontSize: "9px", fontWeight: 700, color: "var(--accent)",
                           background: "var(--accent-soft)", padding: "1px 5px",
                           borderRadius: "999px", border: "1px solid rgba(232,93,58,0.2)",
+                          flexShrink: 0,
                         }}>
                           영향력 큼
                         </span>
                       )}
                     </div>
                     <span style={{
-                      fontSize: "11px", fontWeight: 700,
+                      fontSize: "11px", fontWeight: 700, flexShrink: 0,
                       color: catCompleted === catMissions.length ? "var(--success)" : "var(--ink-muted)",
                       fontFamily: "var(--f-mono)",
                     }}>
