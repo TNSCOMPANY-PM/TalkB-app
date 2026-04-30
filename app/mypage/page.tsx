@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Header from "@/components/talkb/header";
 import Footer from "@/components/talkb/footer";
+import PwaBanner from "@/components/talkb/pwa-banner";
 
 function KakaoIcon({ size = 14 }: { size?: number }) {
   return (
@@ -82,6 +83,9 @@ export default function MyPage() {
         )}
 
         <div style={{ height: "24px" }} />
+
+        {/* PWA 설치 배너 (미설치 모바일 사용자) */}
+        <PwaBanner />
 
         {/* 섹션 라벨 */}
         <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>

@@ -590,7 +590,7 @@ export default function ResultPage() {
 
       <Footer />
 
-      <InstallPrompt />
+      <InstallPrompt autoDelay={8000} />
 
       {/* ─── [7] Sticky CTA (모바일 하단 고정) ──────────── */}
       <div style={{
