@@ -44,7 +44,7 @@ export default function InviteBanner() {
         </p>
         {[
           "우리 매장 무료 GPT 노출 진단",
-          "경쟁사 1곳 심층 분석 (보너스!)",
+          "GPT 노출 진단권 1회 (보너스!)",
           "GPT 최적화 컨설팅 PDF",
         ].map((item) => (
           <div key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>

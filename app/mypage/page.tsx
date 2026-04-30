@@ -81,6 +81,42 @@ export default function MyPage() {
     setTimeout(() => setEditToast(false), 2500);
   };
 
+  const handleShare = async () => {
+    const link = `https://app.talkb.co.kr/?ref=user&utm_source=invite`;
+    const text = `GPT에게 우리 매장을 말하게 하다 - 토크비\n\n요즘 손님들은 GPT에 물어봅니다.\n"강남에서 회식하기 좋은 한식당 추천해줘"\n\n우리 매장, GPT에 노출되고 있나요?\n토크비로 무료 진단받아보세요!\n${link}`;
+
+    const kakao = (window as typeof window & { Kakao?: { isInitialized?: () => boolean; Share?: { sendDefault: (opts: Record<string, unknown>) => void } } }).Kakao;
+    if (kakao?.isInitialized?.() && kakao?.Share) {
+      kakao.Share.sendDefault({
+        objectType: "feed",
+        content: {
+          title: "토크비 (TalkB) | GPT에게 우리 매장을 말하게 하다",
+          description: "우리 매장이 GPT에 노출되고 있나요? 무료 진단받아보세요!",
+          imageUrl: "https://app.talkb.co.kr/og-image-kakao.png",
+          link: { mobileWebUrl: link, webUrl: link },
+        },
+        buttons: [{ title: "무료 진단받기", link: { mobileWebUrl: link, webUrl: link } }],
+      });
+      return;
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "토크비 (TalkB)", text, url: link });
+        return;
+      } catch {
+        // fall through to clipboard
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("초대 링크가 복사되었어요!");
+    } catch {
+      prompt("링크를 복사해주세요:", link);
+    }
+  };
+
   const orderedCategories = getCategoriesInOrder();
   const totalMissions = MISSIONS.length;
   const completedCount = completedIds.length;
@@ -266,7 +302,7 @@ export default function MyPage() {
                 보유
               </p>
               <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0 }}>
-                친구 초대로 진단권 추가 가능
+                사장님 초대로 진단권 추가 가능
               </p>
             </div>
             {MOCK_TICKETS > 0 && (
@@ -321,7 +357,7 @@ export default function MyPage() {
               </button>
               <p style={{ fontSize: "12px", color: "var(--ink-muted)", textAlign: "center", margin: 0 }}>
                 진단권이 없어요.{" "}
-                <span style={{ color: "var(--accent)", fontWeight: 700 }}>친구 초대하고 진단권 받기 →</span>
+                <span style={{ color: "var(--accent)", fontWeight: 700 }}>사장님 초대하고 진단권 받기 →</span>
               </p>
             </div>
           )}
@@ -487,8 +523,8 @@ export default function MyPage() {
           </Link>
         </div>
 
-        {/* ─── [6] 친구 초대 현황 카드 ────────────────────── */}
-        <SectionLabel>🎉 친구 초대 현황</SectionLabel>
+        {/* ─── [6] 사장님 초대 현황 카드 ──────────────────── */}
+        <SectionLabel>🤝 함께 성장하기 현황</SectionLabel>
 
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
@@ -498,9 +534,9 @@ export default function MyPage() {
           {/* 현황 요약 */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
             <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
-              초대한 친구:{" "}
+              초대한 사장님:{" "}
               <span style={{ color: MOCK_INVITED > 0 ? "var(--accent)" : "var(--ink-muted)", fontFamily: "var(--f-mono)" }}>
-                {MOCK_INVITED}명
+                {MOCK_INVITED}분
               </span>
             </p>
           </div>
@@ -539,7 +575,7 @@ export default function MyPage() {
             border: "1px solid var(--border-soft)",
           }}>
             <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 6px" }}>
-              친구 1명 초대 = 매번 받는 혜택 (택 1)
+              사장님 1분 초대 = 매번 받는 혜택 (택 1)
             </p>
             {[
               "🏪 매장 1개 추가 등록 (최대 3매장까지)",
@@ -562,7 +598,7 @@ export default function MyPage() {
               border: "none", cursor: "pointer", marginBottom: inviteOpen ? "12px" : 0,
             }}
           >
-            친구 초대하기 {inviteOpen ? "▲" : "→"}
+            사장님 초대하기 {inviteOpen ? "▲" : "→"}
           </button>
 
           {/* 초대 링크 + 공유 (펼침) */}
@@ -572,24 +608,18 @@ export default function MyPage() {
               padding: "12px", border: "1px solid var(--border-soft)",
             }}>
               <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 10px" }}>
-                🎁 친구도 가입 즉시 경쟁사 분석 1회를 받아요!
+                🎉 초대받은 사장님 혜택: 가입 즉시 진단권 1회 제공!
               </p>
-              <div style={{ display: "flex", gap: "8px" }}>
-                <button style={{
-                  flex: 1, padding: "10px", background: "var(--bg-deep)", color: "var(--ink)",
-                  borderRadius: "var(--r-sm)", fontSize: "12.5px", fontWeight: 700,
-                  border: "1px solid var(--border)", cursor: "pointer",
-                }}>
-                  🔗 링크 복사
-                </button>
-                <button style={{
-                  flex: 1, padding: "10px", background: "var(--kakao)", color: "var(--kakao-text)",
+              <button
+                onClick={handleShare}
+                style={{
+                  width: "100%", padding: "10px", background: "var(--kakao)", color: "var(--kakao-text)",
                   borderRadius: "var(--r-sm)", fontSize: "12.5px", fontWeight: 700,
                   border: "none", cursor: "pointer",
-                }}>
-                  💬 카카오톡 공유
-                </button>
-              </div>
+                }}
+              >
+                💬 사장님 초대하기
+              </button>
             </div>
           )}
         </div>

@@ -3,8 +3,21 @@ import "./globals.css";
 import DevNav from "@/components/talkb/dev-nav";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://app.talkb.co.kr"),
   title: "토크비 (TalkB) | GPT에게 우리 매장을 말하게 하다",
   description: "GPT에게 우리 매장을 말하게 하다 - 외식업 사장님을 위한 AI 노출 솔루션",
+  openGraph: {
+    title: "토크비 (TalkB) | GPT에게 우리 매장을 말하게 하다",
+    description: "GPT에게 우리 매장을 말하게 하다 - 외식업 사장님을 위한 AI 노출 솔루션",
+    images: [{ url: "/og-image-kakao.png", width: 800, height: 400, alt: "토크비 (TalkB)" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "토크비 (TalkB) | GPT에게 우리 매장을 말하게 하다",
+    description: "GPT에게 우리 매장을 말하게 하다 - 외식업 사장님을 위한 AI 노출 솔루션",
+    images: ["/og-image-kakao.png"],
+  },
 };
 
 export default function RootLayout({

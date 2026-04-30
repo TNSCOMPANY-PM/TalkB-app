@@ -234,6 +234,42 @@ export default function ResultPage() {
     }
   };
 
+  const handleShare = async () => {
+    const link = `https://app.talkb.co.kr/?ref=user&utm_source=invite`;
+    const text = `GPT에게 우리 매장을 말하게 하다 - 토크비\n\n요즘 손님들은 GPT에 물어봅니다.\n"강남에서 회식하기 좋은 한식당 추천해줘"\n\n우리 매장, GPT에 노출되고 있나요?\n토크비로 무료 진단받아보세요!\n${link}`;
+
+    const kakao = (window as typeof window & { Kakao?: { isInitialized?: () => boolean; Share?: { sendDefault: (opts: Record<string, unknown>) => void } } }).Kakao;
+    if (kakao?.isInitialized?.() && kakao?.Share) {
+      kakao.Share.sendDefault({
+        objectType: "feed",
+        content: {
+          title: "토크비 (TalkB) | GPT에게 우리 매장을 말하게 하다",
+          description: "우리 매장이 GPT에 노출되고 있나요? 무료 진단받아보세요!",
+          imageUrl: "https://app.talkb.co.kr/og-image-kakao.png",
+          link: { mobileWebUrl: link, webUrl: link },
+        },
+        buttons: [{ title: "무료 진단받기", link: { mobileWebUrl: link, webUrl: link } }],
+      });
+      return;
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "토크비 (TalkB)", text, url: link });
+        return;
+      } catch {
+        // fall through to clipboard
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("초대 링크가 복사되었어요!");
+    } catch {
+      prompt("링크를 복사해주세요:", link);
+    }
+  };
+
   const answeredCount = measurementResults.filter((q) => q.answered).length;
   const completionPct = Math.round((completed.length / TOTAL_MISSIONS) * 100);
   const nextMission = getNextMission(completed);
@@ -709,75 +745,65 @@ export default function ResultPage() {
           </p>
         </div>
 
-        {/* ─── [6] 친구 초대 블록 ──────────────────────────── */}
+        {/* ─── [6] 사장님 초대 블록 ──────────────────────────── */}
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
           borderRadius: "var(--r-md)", padding: "16px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px", lineHeight: 1.55 }}>
-            🎉 다른 매장도 진단받고 싶으신가요?<br />
-            GPT 노출 변화를 빨리 확인하고 싶으신가요?
+          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 4px", lineHeight: 1.55 }}>
+            🤝 함께 성장하고 싶은 사장님이 있으신가요?
+          </p>
+          <p style={{ fontSize: "12.5px", color: "var(--ink-mid)", margin: "0 0 14px", lineHeight: 1.6 }}>
+            토크비를 소개해드리고 사장님도 추가 혜택을 받아보세요
           </p>
 
+          {/* 사장님 혜택 */}
           <div style={{
             background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
             padding: "10px 14px", marginBottom: "8px",
             border: "1px solid var(--border-soft)",
           }}>
             <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 8px" }}>
-              친구 1명 초대 = 매번 받는 혜택 (택 1)
+              🎁 사장님 혜택 (택 1)
             </p>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "5px" }}>
-              <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
-              <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>🏪 매장 1개 추가 등록 (최대 3매장까지)</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "2px" }}>
-              <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
-              <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>🎫 진단권 1개 추가 (월 최대 5개)</span>
-            </div>
-            <div style={{
-              marginLeft: "14px", marginTop: "6px",
-              paddingLeft: "10px", borderLeft: "2px solid var(--border)",
-            }}>
-              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 700, margin: "0 0 2px" }}>
-                → 매월 자동 진단을 기다리지 않고
-              </p>
-              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 700, margin: "0 0 6px" }}>
-                &nbsp;&nbsp;&nbsp;원할 때 즉시 다시 진단받기!
-              </p>
-              <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: 0 }}>
-                진단권으로 미션 완료 후 GPT 노출 변화를 즉시 확인하세요
-              </p>
-            </div>
+            {[
+              "🏪 매장 1개 추가 등록 (최대 3매장까지)",
+              "🎫 진단권 1개 추가 (월 최대 5개)",
+            ].map((item) => (
+              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "5px" }}>
+                <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
+                <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>{item}</span>
+              </div>
+            ))}
           </div>
 
+          {/* 초대받은 사장님 혜택 */}
           <div style={{
             background: "#FFF4E8", border: "1px solid #FFD9AD",
-            borderRadius: "var(--r-sm)", padding: "8px 12px", marginBottom: "10px",
+            borderRadius: "var(--r-sm)", padding: "8px 12px", marginBottom: "6px",
           }}>
             <p style={{ fontSize: "12px", fontWeight: 700, color: "#B45309", margin: 0 }}>
-              🎁 친구도 가입 즉시 경쟁사 분석 1회를 받아요!
+              🎉 초대받은 사장님 혜택: 가입 즉시 진단권 1회 제공!
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button style={{
-              flex: 1, padding: "11px", background: "var(--bg-deep)", color: "var(--ink)",
-              borderRadius: "var(--r-sm)", fontSize: "12.5px", fontWeight: 700,
-              border: "1px solid var(--border)", cursor: "pointer",
-            }}>
-              🔗 링크 복사
-            </button>
-            <button style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "5px",
-              padding: "11px", background: "var(--kakao)", color: "var(--kakao-text)",
-              borderRadius: "var(--r-sm)", fontSize: "12.5px", fontWeight: 700,
+          {/* 조건 안내 */}
+          <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: "0 0 10px", lineHeight: 1.55 }}>
+            ⚠️ 보상 조건: 초대받은 사장님이 첫 진단 완료 후 지급됩니다
+          </p>
+
+          <button
+            onClick={handleShare}
+            style={{
+              width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: "5px",
+              padding: "12px", background: "var(--kakao)", color: "var(--kakao-text)",
+              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 800,
               border: "none", cursor: "pointer",
-            }}>
-              <KakaoIcon size={12} /> 카카오톡 공유
-            </button>
-          </div>
+            }}
+          >
+            <KakaoIcon size={13} /> 사장님 초대하기
+          </button>
         </div>
 
       </main>
