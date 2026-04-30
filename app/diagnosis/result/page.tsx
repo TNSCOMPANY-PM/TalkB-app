@@ -364,29 +364,41 @@ export default function ResultPage() {
           </div>
         </div>
 
-        {/* ─── [3] 카카오톡 채널 친구 추가 카드 ───────────── */}
+        {/* ─── [3] 카카오톡 채널 구독 카드 ────────────────── */}
         <div style={{
           background: "#1A1A0A", border: "1px solid #7A6A00",
           borderRadius: "var(--r-md)", padding: "18px 16px", marginBottom: "16px",
         }}>
-          <div style={{ marginBottom: "10px" }}>
-            <p style={{
-              fontSize: "15px", fontWeight: 800, color: "#FEE500",
-              margin: "0 0 4px", letterSpacing: "-0.02em",
-            }}>
-              💛 카카오톡 채널 추가하고
-            </p>
-            <p style={{
-              fontSize: "15px", fontWeight: 800, color: "#FEE500",
-              margin: "0 0 10px", letterSpacing: "-0.02em",
-            }}>
-              매월 자동 진단 받기
-            </p>
-            <p style={{ fontSize: "12.5px", color: "#A3A3A3", margin: 0, lineHeight: 1.65 }}>
-              사장님 매장의 GPT 노출 변화를<br />
-              매월 카카오톡으로 받아보세요
-            </p>
+          {/* 제목 */}
+          <p style={{
+            fontSize: "14px", fontWeight: 800, color: "#FEE500",
+            margin: "0 0 14px", letterSpacing: "-0.02em", lineHeight: 1.45,
+          }}>
+            🔔 토크비 구독하면 매월 무료 자동 진단해드려요
+          </p>
+
+          {/* 체크리스트 */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "14px" }}>
+            {[
+              "매월 사장님 매장의 GPT 노출 변화 추적",
+              "카카오톡으로 자동 발송",
+              "구독 유지 시 영구 무료",
+            ].map((item) => (
+              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                <span style={{ color: "#FEE500", fontWeight: 700, fontSize: "12px", flexShrink: 0, marginTop: "1px" }}>✓</span>
+                <span style={{ fontSize: "12.5px", color: "#D4D4D8", lineHeight: 1.5 }}>{item}</span>
+              </div>
+            ))}
           </div>
+
+          {/* 안내 문구 */}
+          <p style={{
+            fontSize: "11px", color: "#6B6B6B", margin: "0 0 12px", lineHeight: 1.6,
+          }}>
+            ⓘ 구독 해지(채널 차단) 시 매월 자동 진단이 중단돼요
+          </p>
+
+          {/* 버튼 */}
           <a
             href="https://pf.kakao.com/_JxlWTX"
             target="_blank"
@@ -400,7 +412,7 @@ export default function ResultPage() {
               boxSizing: "border-box",
             }}
           >
-            <KakaoIcon size={14} /> 📢 토크비 채널 추가하기
+            <KakaoIcon size={14} /> 토크비 구독하기
           </a>
         </div>
 
@@ -614,8 +626,9 @@ export default function ResultPage() {
           borderRadius: "var(--r-md)", padding: "16px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px", lineHeight: 1.4 }}>
-            🤝 추가하실 매장이 있으신가요? 경쟁사가 궁금하신가요?
+          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px", lineHeight: 1.55 }}>
+            🎉 다른 매장도 진단받고 싶으신가요?<br />
+            GPT 노출 변화를 빨리 확인하고 싶으신가요?
           </p>
 
           {/* 즉시 보상 */}

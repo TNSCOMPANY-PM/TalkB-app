@@ -140,8 +140,9 @@ export default function MyPage() {
           borderRadius: "var(--r-md)", padding: "16px", marginBottom: "24px",
           boxShadow: "var(--sh-sm)",
         }}>
-          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px", lineHeight: 1.4 }}>
-            🤝 추가하실 매장이 있으신가요? 경쟁사가 궁금하신가요?
+          <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px", lineHeight: 1.55 }}>
+            🎉 다른 매장도 진단받고 싶으신가요?<br />
+            GPT 노출 변화를 빨리 확인하고 싶으신가요?
           </p>
 
           {/* 즉시 보상 */}
