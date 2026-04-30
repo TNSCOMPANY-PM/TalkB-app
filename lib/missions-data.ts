@@ -92,7 +92,7 @@ export const CATEGORIES: CategoryInfo[] = [
     shortName: "구글 GBP",
     weight: 10,
     importance: 1,
-    description: "외국인 손님 + 글로벌 AI 학습 출처",
+    description: "글로벌 AI 학습 출처",
     order: 5,
   },
 ];

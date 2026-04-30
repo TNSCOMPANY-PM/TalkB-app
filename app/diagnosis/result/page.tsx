@@ -6,11 +6,18 @@ import Header from "@/components/talkb/header";
 import Footer from "@/components/talkb/footer";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
+import {
   getMissionsByCategory,
   getCategoriesInOrder,
   getCompletedMissions,
   toggleMissionCompletion,
 } from "@/lib/missions-data";
+import type { Mission } from "@/lib/missions-data";
 
 // ── 목업 측정 결과 (추후 GPT API 연동) ─────────────────────
 const measurementResults = [
@@ -51,6 +58,136 @@ function KakaoIcon({ size = 13 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 18 18" fill="currentColor">
       <path d="M9 1C4.582 1 1 3.694 1 7.018c0 2.116 1.435 3.973 3.6 5.034l-.728 2.649c-.06.218.18.39.366.262L7.41 12.83C7.93 12.92 8.46 13 9 13c4.418 0 8-2.694 8-6.018C17 3.694 13.418 1 9 1z" />
     </svg>
+  );
+}
+
+// ── 미션 가이드 펼침 내용 ────────────────────────────────────
+function MissionGuide({ mission }: { mission: Mission }) {
+  return (
+    <div style={{
+      background: "var(--bg-soft)",
+      borderTop: "1px solid var(--border-soft)",
+      padding: "14px 12px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "14px",
+    }}>
+      {/* 왜 필요한가요? */}
+      <div>
+        <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", margin: "0 0 5px" }}>
+          🎯 왜 필요한가요?
+        </p>
+        <p style={{ fontSize: "12.5px", color: "var(--ink-mid)", margin: 0, lineHeight: 1.65 }}>
+          {mission.why}
+        </p>
+      </div>
+
+      {/* 어떻게 확인하나요? */}
+      <div>
+        <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", margin: "0 0 6px" }}>
+          ✅ 어떻게 확인하나요?
+        </p>
+        <ol style={{ margin: 0, padding: "0 0 0 16px", display: "flex", flexDirection: "column", gap: "4px" }}>
+          {mission.howToCheck.map((item, i) => (
+            <li key={i} style={{ fontSize: "12.5px", color: "var(--ink-mid)", lineHeight: 1.6 }}>
+              {item}
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* 안 되어 있다면? */}
+      <div>
+        <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", margin: "0 0 6px" }}>
+          🛠️ 안 되어 있다면?
+        </p>
+        <ol style={{ margin: 0, padding: "0 0 0 16px", display: "flex", flexDirection: "column", gap: "4px" }}>
+          {mission.howToFix.map((item, i) => (
+            <li key={i} style={{ fontSize: "12.5px", color: "var(--ink-mid)", lineHeight: 1.6 }}>
+              {item}
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* 템플릿 (있는 경우) */}
+      {mission.template && (
+        <div style={{
+          background: "var(--white)",
+          border: "1px solid var(--border)",
+          borderRadius: "var(--r-sm)",
+          padding: "10px 12px",
+        }}>
+          <p style={{
+            fontSize: "10px", fontWeight: 700, color: "var(--ink-muted)",
+            margin: "0 0 6px", textTransform: "uppercase", letterSpacing: "0.06em",
+          }}>
+            📝 템플릿
+          </p>
+          <p style={{
+            fontSize: "12px", color: "var(--ink-mid)", margin: 0,
+            lineHeight: 1.7, fontFamily: "var(--f-mono)", whiteSpace: "pre-line",
+          }}>
+            {mission.template}
+          </p>
+        </div>
+      )}
+
+      {/* 좋은 예시 */}
+      {mission.goodExample && (
+        <div style={{
+          background: "#F0FDF4", border: "1px solid #BBF7D0",
+          borderRadius: "var(--r-sm)", padding: "10px 12px",
+        }}>
+          <p style={{
+            fontSize: "10px", fontWeight: 700, color: "#166534",
+            margin: "0 0 5px", textTransform: "uppercase", letterSpacing: "0.06em",
+          }}>
+            ✅ 좋은 예시
+          </p>
+          <p style={{ fontSize: "12px", color: "#166534", margin: 0, lineHeight: 1.65, whiteSpace: "pre-line" }}>
+            {mission.goodExample}
+          </p>
+        </div>
+      )}
+
+      {/* 나쁜 예시 */}
+      {mission.badExample && (
+        <div style={{
+          background: "#FFF1F2", border: "1px solid #FECDD3",
+          borderRadius: "var(--r-sm)", padding: "10px 12px",
+        }}>
+          <p style={{
+            fontSize: "10px", fontWeight: 700, color: "#9F1239",
+            margin: "0 0 5px", textTransform: "uppercase", letterSpacing: "0.06em",
+          }}>
+            ❌ 이런 답글은 효과 없어요
+          </p>
+          <p style={{ fontSize: "12px", color: "#9F1239", margin: 0, lineHeight: 1.65 }}>
+            {mission.badExample}
+          </p>
+        </div>
+      )}
+
+      {/* 주의사항 */}
+      {mission.warning && (
+        <div style={{
+          background: "#FFFBEB", border: "1px solid #FDE68A",
+          borderRadius: "var(--r-sm)", padding: "10px 12px",
+        }}>
+          <p style={{ fontSize: "12px", color: "#92400E", margin: 0, lineHeight: 1.65 }}>
+            <strong>⚠️ </strong>{mission.warning}
+          </p>
+        </div>
+      )}
+
+      {/* 팁 */}
+      {mission.tip && (
+        <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0, fontStyle: "italic" }}>
+          💡 팁: {mission.tip}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -242,7 +379,7 @@ export default function ResultPage() {
           }} />
         </div>
 
-        {/* 카테고리별 미션 */}
+        {/* 카테고리별 미션 (아코디언) */}
         {orderedCategories.map((cat) => {
           const missions = getMissionsByCategory(cat.id);
           const completedInCat = missions.filter((m) => completed.includes(m.id)).length;
@@ -284,42 +421,64 @@ export default function ResultPage() {
                 </span>
               </div>
 
-              {/* 미션 목록 */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {/* 미션 아코디언 */}
+              <Accordion type="multiple" style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 {missions.map((mission) => {
                   const isCompleted = completed.includes(mission.id);
                   return (
-                    <div key={mission.id} style={{
-                      display: "flex", alignItems: "flex-start", gap: "12px",
-                      padding: "10px 12px",
-                      background: isCompleted ? "var(--success-soft)" : "var(--white)",
-                      border: `1px solid ${isCompleted ? "rgba(22,163,74,0.2)" : "var(--border)"}`,
-                      borderRadius: "var(--r-sm)",
-                      transition: "background 0.15s, border-color 0.15s",
-                    }}>
-                      <Checkbox
-                        id={mission.id}
-                        checked={isCompleted}
-                        onCheckedChange={() => handleToggle(mission.id)}
-                        className="mt-0.5 flex-shrink-0"
-                      />
-                      <label htmlFor={mission.id} style={{ flex: 1, cursor: "pointer" }}>
-                        <p style={{
-                          fontSize: "13px", fontWeight: 600, margin: "0 0 2px",
-                          color: isCompleted ? "var(--ink-muted)" : "var(--ink)",
-                          textDecoration: isCompleted ? "line-through" : "none",
-                          lineHeight: 1.45,
-                        }}>
-                          {mission.title}
-                        </p>
-                        <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: 0 }}>
-                          ⏱ {mission.duration}
-                        </p>
-                      </label>
-                    </div>
+                    <AccordionItem
+                      key={mission.id}
+                      value={mission.id}
+                      className="border-0"
+                      style={{
+                        background: isCompleted ? "var(--success-soft)" : "var(--white)",
+                        border: `1px solid ${isCompleted ? "rgba(22,163,74,0.2)" : "var(--border)"}`,
+                        borderRadius: "var(--r-sm)",
+                        overflow: "hidden",
+                        transition: "background 0.15s, border-color 0.15s",
+                      }}
+                    >
+                      {/* 미션 항목 헤더: 체크박스 + 제목 + 시간 + 화살표 */}
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", padding: "10px 12px" }}>
+                        {/* 체크박스: 클릭이 아코디언 토글로 전파되지 않도록 */}
+                        <div
+                          onClick={(e) => e.stopPropagation()}
+                          style={{ paddingTop: "3px", flexShrink: 0 }}
+                        >
+                          <Checkbox
+                            id={`cb-${mission.id}`}
+                            checked={isCompleted}
+                            onCheckedChange={() => handleToggle(mission.id)}
+                          />
+                        </div>
+                        {/* AccordionTrigger: 제목 + 소요시간 + 자동 화살표 */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <AccordionTrigger className="py-0 hover:no-underline w-full">
+                            <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
+                              <p style={{
+                                fontSize: "13px", fontWeight: 600, margin: "0 0 2px",
+                                color: isCompleted ? "var(--ink-muted)" : "var(--ink)",
+                                textDecoration: isCompleted ? "line-through" : "none",
+                                lineHeight: 1.45,
+                              }}>
+                                {mission.title}
+                              </p>
+                              <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: 0 }}>
+                                ⏱ {mission.duration}
+                              </p>
+                            </div>
+                          </AccordionTrigger>
+                        </div>
+                      </div>
+
+                      {/* 펼침 영역: 미션 가이드 */}
+                      <AccordionContent className="p-0">
+                        <MissionGuide mission={mission} />
+                      </AccordionContent>
+                    </AccordionItem>
                   );
                 })}
-              </div>
+              </Accordion>
             </div>
           );
         })}
@@ -338,7 +497,7 @@ export default function ResultPage() {
           </p>
         </div>
 
-        {/* ─── [6] 친구 초대 블록 (옵션 B) ────────────────── */}
+        {/* ─── [6] 친구 초대 블록 ──────────────────────────── */}
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
           borderRadius: "var(--r-md)", padding: "16px",

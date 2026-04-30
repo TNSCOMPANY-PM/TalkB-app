@@ -57,19 +57,21 @@ export default function Header({ isLoggedIn = false, tickets = 0 }: HeaderProps)
 
         {isLoggedIn ? (
           <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0, marginLeft: "12px" }}>
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: "3px",
-              fontSize: "13px", fontWeight: 800,
-              color: "var(--accent)",
-              background: "var(--accent-soft)",
-              padding: "6px 11px", borderRadius: "999px",
-              whiteSpace: "nowrap", letterSpacing: "-0.01em",
-              border: "1px solid rgba(232,93,58,0.25)",
-            }}>
-              🏪{" "}
-              <span className="hdr-badge-long">{tickets}개 운영</span>
-              <span className="hdr-badge-short">{tickets}</span>
-            </span>
+            {tickets > 0 && (
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: "3px",
+                fontSize: "13px", fontWeight: 800,
+                color: "var(--accent)",
+                background: "var(--accent-soft)",
+                padding: "6px 11px", borderRadius: "999px",
+                whiteSpace: "nowrap", letterSpacing: "-0.01em",
+                border: "1px solid rgba(232,93,58,0.25)",
+              }}>
+                🏪{" "}
+                <span className="hdr-badge-long">{tickets}개 운영</span>
+                <span className="hdr-badge-short">{tickets}</span>
+              </span>
+            )}
 
             <Link
               href="/mypage"
