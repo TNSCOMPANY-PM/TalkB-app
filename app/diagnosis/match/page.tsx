@@ -5,7 +5,7 @@ import Footer from "@/components/talkb/footer";
 export default function MatchPage() {
   return (
     <div className="app-container">
-      <Header isLoggedIn={true} tickets={1} />
+      <Header isLoggedIn={true} stores={[{ name: "한미옥 광장점" }]} />
 
       <main style={{ padding: "28px 20px 48px" }}>
         <span style={{

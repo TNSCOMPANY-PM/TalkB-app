@@ -212,7 +212,7 @@ export default function ResultPage() {
 
   return (
     <div className="app-container">
-      <Header isLoggedIn={true} tickets={1} />
+      <Header isLoggedIn={true} stores={[{ name: "한미옥 광장점" }]} />
 
       {/* 하단 Sticky CTA 높이만큼 패딩 확보 */}
       <main style={{ padding: "20px 20px 100px" }}>
@@ -368,16 +368,44 @@ export default function ResultPage() {
           </span>
         </div>
 
-        {/* 전체 진척도 바 */}
-        <div style={{
-          height: "5px", background: "var(--bg-deep)",
-          borderRadius: "999px", overflow: "hidden", marginBottom: "20px",
-        }}>
+        {/* 종합 진척도 카드 / 축하 카드 */}
+        {completed.length === TOTAL_MISSIONS ? (
           <div style={{
-            height: "100%", background: "var(--accent)", borderRadius: "999px",
-            width: `${completionPct}%`, transition: "width 0.3s ease",
-          }} />
-        </div>
+            background: "#F0FDF4", border: "1px solid #86EFAC",
+            borderRadius: "var(--r-md)", padding: "18px 16px", marginBottom: "20px",
+          }}>
+            <p style={{ fontSize: "20px", fontWeight: 900, color: "#166534", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+              🎉 기본기 완성!
+            </p>
+            <p style={{ fontSize: "13px", color: "#16A34A", margin: 0, lineHeight: 1.65 }}>
+              GPT 학습 반영까지 2~4주 소요됩니다.<br />
+              토크비가 매월 자동 진단해드릴게요!
+            </p>
+          </div>
+        ) : (
+          <div style={{
+            background: "var(--bg-soft)", border: "1px solid var(--border)",
+            borderRadius: "var(--r-md)", padding: "16px", marginBottom: "20px",
+          }}>
+            <p style={{ fontSize: "13px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px" }}>
+              🎯 사장님 매장 GPT 노출 기본기
+            </p>
+            <div style={{
+              height: "8px", background: "var(--bg-deep)", borderRadius: "999px",
+              overflow: "hidden", marginBottom: "8px",
+            }}>
+              <div style={{
+                height: "100%", background: "var(--accent)", borderRadius: "999px",
+                width: `${completionPct}%`, transition: "width 0.4s ease",
+              }} />
+            </div>
+            <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0, textAlign: "right" }}>
+              <span style={{ fontWeight: 700, color: completed.length > 0 ? "var(--accent)" : "var(--ink-muted)", fontFamily: "var(--f-mono)" }}>
+                {completed.length}/{TOTAL_MISSIONS}
+              </span>{" "}미션 완료 · {completionPct}%
+            </p>
+          </div>
+        )}
 
         {/* 카테고리별 미션 (아코디언) */}
         {orderedCategories.map((cat) => {

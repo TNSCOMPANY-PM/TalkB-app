@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 
+interface StoreInfo {
+  name: string;
+}
+
 interface HeaderProps {
   isLoggedIn?: boolean;
-  tickets?: number;
+  stores?: StoreInfo[];
 }
 
 function BookOpenIcon() {
@@ -18,87 +22,89 @@ function BookOpenIcon() {
   );
 }
 
-export default function Header({ isLoggedIn = false, tickets = 0 }: HeaderProps) {
+function truncate(name: string, maxLen = 8): string {
+  return name.length > maxLen ? name.slice(0, maxLen) + "…" : name;
+}
+
+export default function Header({ isLoggedIn = false, stores = [] }: HeaderProps) {
   const [hovered, setHovered] = useState(false);
   const logoHref = isLoggedIn ? "/mypage" : "/";
 
+  const badgeHref = stores.length === 0 ? "/diagnosis/input" : "/mypage";
+  const badgeText =
+    stores.length === 0
+      ? "매장 등록하기"
+      : stores.length === 1
+      ? truncate(stores[0].name)
+      : `${truncate(stores[0].name)} 외 ${stores.length - 1}개`;
+
   return (
-    <>
-      <style>{`
-        .hdr-badge-short { display: none; }
-        @media (max-width: 360px) {
-          .hdr-badge-long { display: none; }
-          .hdr-badge-short { display: inline; }
-        }
-      `}</style>
+    <header style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "16px 20px",
+      borderBottom: "1px solid var(--border)",
+      background: "var(--bg)",
+      position: "sticky",
+      top: 0,
+      zIndex: 10,
+      paddingTop: "max(16px, env(safe-area-inset-top))",
+    }}>
+      <Link href={logoHref} style={{ textDecoration: "none", minWidth: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ fontSize: "18px", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--ink)" }}>TalkB</span>
+          <span style={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--accent)", display: "inline-block", flexShrink: 0, marginBottom: "1px" }} />
+          <span style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink-mid)", letterSpacing: "-0.01em" }}>토크비</span>
+        </div>
+        <p style={{ fontSize: "10px", fontWeight: 600, color: "var(--ink-muted)", margin: "2px 0 0", letterSpacing: "0.01em" }}>
+          외식업 전문 AI 노출 솔루션
+        </p>
+      </Link>
 
-      <header style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "16px 20px",
-        borderBottom: "1px solid var(--border)",
-        background: "var(--bg)",
-        position: "sticky",
-        top: 0,
-        zIndex: 10,
-        paddingTop: "max(16px, env(safe-area-inset-top))",
-      }}>
-        <Link href={logoHref} style={{ textDecoration: "none", minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "18px", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--ink)" }}>TalkB</span>
-            <span style={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--accent)", display: "inline-block", flexShrink: 0, marginBottom: "1px" }} />
-            <span style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink-mid)", letterSpacing: "-0.01em" }}>토크비</span>
-          </div>
-          <p style={{ fontSize: "10px", fontWeight: 600, color: "var(--ink-muted)", margin: "2px 0 0", letterSpacing: "0.01em" }}>
-            외식업 전문 AI 노출 솔루션
-          </p>
-        </Link>
-
-        {isLoggedIn ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0, marginLeft: "12px" }}>
-            {tickets > 0 && (
-              <span style={{
-                display: "inline-flex", alignItems: "center", gap: "3px",
-                fontSize: "13px", fontWeight: 800,
-                color: "var(--accent)",
-                background: "var(--accent-soft)",
-                padding: "6px 11px", borderRadius: "999px",
-                whiteSpace: "nowrap", letterSpacing: "-0.01em",
-                border: "1px solid rgba(232,93,58,0.25)",
-              }}>
-                🏪{" "}
-                <span className="hdr-badge-long">{tickets}개 운영</span>
-                <span className="hdr-badge-short">{tickets}</span>
-              </span>
-            )}
-
-            <Link
-              href="/mypage"
-              onMouseEnter={() => setHovered(true)}
-              onMouseLeave={() => setHovered(false)}
-              style={{
-                display: "flex", alignItems: "center", justifyContent: "center",
-                width: "36px", height: "36px", borderRadius: "50%", flexShrink: 0,
-                background: hovered ? "var(--bg-deep)" : "var(--bg-soft)",
-                border: "1px solid var(--border)",
-                color: hovered ? "var(--ink)" : "var(--ink-mid)",
-                textDecoration: "none",
-                transition: "background 0.15s, color 0.15s",
-              }}
-            >
-              <BookOpenIcon />
-            </Link>
-          </div>
-        ) : (
-          <Link href="/diagnosis/login" style={{
-            fontSize: "13px", fontWeight: 700, color: "var(--ink-mid)",
-            textDecoration: "none", flexShrink: 0,
-          }}>
-            로그인
+      {isLoggedIn ? (
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0, marginLeft: "12px" }}>
+          <Link
+            href={badgeHref}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: "3px",
+              fontSize: "13px", fontWeight: 800,
+              color: "var(--accent)",
+              background: "var(--accent-soft)",
+              padding: "6px 11px", borderRadius: "999px",
+              whiteSpace: "nowrap", letterSpacing: "-0.01em",
+              border: "1px solid rgba(232,93,58,0.25)",
+              textDecoration: "none",
+            }}
+          >
+            🏪 {badgeText}
           </Link>
-        )}
-      </header>
-    </>
+
+          <Link
+            href="/mypage"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              width: "36px", height: "36px", borderRadius: "50%", flexShrink: 0,
+              background: hovered ? "var(--bg-deep)" : "var(--bg-soft)",
+              border: "1px solid var(--border)",
+              color: hovered ? "var(--ink)" : "var(--ink-mid)",
+              textDecoration: "none",
+              transition: "background 0.15s, color 0.15s",
+            }}
+          >
+            <BookOpenIcon />
+          </Link>
+        </div>
+      ) : (
+        <Link href="/diagnosis/login" style={{
+          fontSize: "13px", fontWeight: 700, color: "var(--ink-mid)",
+          textDecoration: "none", flexShrink: 0,
+        }}>
+          로그인
+        </Link>
+      )}
+    </header>
   );
 }

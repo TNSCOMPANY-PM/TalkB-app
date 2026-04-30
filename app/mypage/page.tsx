@@ -20,7 +20,7 @@ const stores = [
 export default function MyPage() {
   return (
     <div className="app-container">
-      <Header isLoggedIn={true} tickets={REGISTERED} />
+      <Header isLoggedIn={true} stores={stores} />
 
       <main style={{ padding: "20px 20px 48px" }}>
 

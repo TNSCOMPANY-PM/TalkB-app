@@ -363,7 +363,7 @@ export const MISSIONS: Mission[] = [
     id: "m13",
     number: 13,
     category: "official_channel",
-    title: "인스타 비즈니스 계정 생성 (없으면)",
+    title: "인스타 비즈니스 계정 생성 또는 전환",
     duration: "15분",
     why: "일반 계정 vs 비즈니스 계정은 GPT가 처리하는 신호가 다릅니다. 비즈니스 계정만 위치/카테고리/연락처 정보가 명확히 인식돼요.",
     howToCheck: [
