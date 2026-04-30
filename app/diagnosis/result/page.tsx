@@ -18,6 +18,7 @@ import {
   toggleMissionCompletion,
 } from "@/lib/missions-data";
 import type { Mission } from "@/lib/missions-data";
+import InstallPrompt from "@/components/talkb/install-prompt";
 
 // ── 목업 측정 결과 (추후 GPT API 연동) ─────────────────────
 const measurementResults = [
@@ -588,6 +589,8 @@ export default function ResultPage() {
       </main>
 
       <Footer />
+
+      <InstallPrompt />
 
       {/* ─── [7] Sticky CTA (모바일 하단 고정) ──────────── */}
       <div style={{
