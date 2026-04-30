@@ -271,7 +271,7 @@ export default function ResultPage() {
             }}>
               {answeredCount}/5
             </p>
-            <p style={{ fontSize: "14px", color: "#A3A3A3", margin: "10px 0 0" }}>
+            <p style={{ fontSize: "14px", color: "#D4D4D8", margin: "10px 0 0" }}>
               5개 질문 중 {answeredCount}개에서 답변했어요
             </p>
           </div>
@@ -290,7 +290,7 @@ export default function ResultPage() {
                   <span style={{
                     fontSize: "10px", fontWeight: 700, padding: "2px 6px",
                     borderRadius: "4px", flexShrink: 0, marginTop: "2px",
-                    background: "rgba(255,255,255,0.08)", color: "#888",
+                    background: "rgba(255,255,255,0.08)", color: "#B0B0B8",
                     fontFamily: "var(--f-mono)",
                   }}>
                     {q.depth}
@@ -302,7 +302,7 @@ export default function ResultPage() {
                   </span>
                   <span style={{
                     fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap", flexShrink: 0,
-                    color: q.answered ? "var(--success)" : "#6B6B6B",
+                    color: q.answered ? "var(--success)" : "#9E9EA8",
                     background: q.answered ? "rgba(22,163,74,0.15)" : "rgba(255,255,255,0.05)",
                     padding: "3px 8px", borderRadius: "999px", marginTop: "1px",
                   }}>
@@ -319,13 +319,13 @@ export default function ResultPage() {
                     padding: "8px 10px",
                   }}>
                     <p style={{
-                      fontSize: "10.5px", fontWeight: 700, color: "#888",
+                      fontSize: "10.5px", fontWeight: 700, color: "#C8C8D0",
                       margin: "0 0 5px", letterSpacing: "0.02em",
                     }}>
                       💡 GPT가 추천한 매장
                     </p>
                     <p style={{
-                      fontSize: "12px", color: "#A3A3A3", margin: 0, lineHeight: 1.6,
+                      fontSize: "12px", color: "#D4D4D8", margin: 0, lineHeight: 1.6,
                     }}>
                       {q.recommendedStores.join(", ")}
                     </p>
@@ -344,9 +344,9 @@ export default function ResultPage() {
             <p style={{ fontSize: "11px", color: "var(--accent)", fontWeight: 700, margin: "0 0 5px" }}>
               잠깐, 이게 중요해요
             </p>
-            <p style={{ fontSize: "12.5px", color: "#A3A3A3", margin: 0, lineHeight: 1.65 }}>
+            <p style={{ fontSize: "12.5px", color: "#C4C4CC", margin: 0, lineHeight: 1.65 }}>
               사장님이 직접 검색하면 내 매장이 나옵니다.{" "}
-              <strong style={{ color: "#D4D4D8" }}>처음 방문하는 손님의 GPT는 전혀 다른 결과</strong>를 보여줍니다.
+              <strong style={{ color: "#F0F0F4" }}>처음 방문하는 손님의 GPT는 전혀 다른 결과</strong>를 보여줍니다.
               이 진단은 그 손님 시점으로 측정한 결과입니다.
             </p>
           </div>
@@ -364,57 +364,28 @@ export default function ResultPage() {
           </div>
         </div>
 
-        {/* ─── [3] 카카오톡 채널 구독 카드 ────────────────── */}
-        <div style={{
-          background: "#1A1A0A", border: "1px solid #7A6A00",
-          borderRadius: "var(--r-md)", padding: "18px 16px", marginBottom: "16px",
-        }}>
-          {/* 제목 */}
-          <p style={{
-            fontSize: "14px", fontWeight: 800, color: "#FEE500",
-            margin: "0 0 14px", letterSpacing: "-0.02em", lineHeight: 1.45,
-          }}>
-            🔔 토크비 구독하면 매월 무료 자동 진단해드려요
-          </p>
+        {/*
+          카카오톡 채널 구독 카드 — 비즈채널 심사 완료 후 재도입
+          심사 완료 예상: 2026년 5월 초
+          TODO: 자동 구독 상태 감지 + 상태별 카드 동적 변경 (동균팀장 협업)
+          - kakao webhook + 알림톡 발송 결과 기반 구독 상태 자동 감지
+          - Supabase users 테이블에 kakao_subscribed 필드 추가
+          - 구독 상태별 카드: unsubscribed / subscribed / unsubscribed_again
 
-          {/* 체크리스트 */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "14px" }}>
-            {[
-              "매월 사장님 매장의 GPT 노출 변화 추적",
-              "카카오톡으로 자동 발송",
-              "구독 유지 시 영구 무료",
-            ].map((item) => (
-              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-                <span style={{ color: "#FEE500", fontWeight: 700, fontSize: "12px", flexShrink: 0, marginTop: "1px" }}>✓</span>
-                <span style={{ fontSize: "12.5px", color: "#D4D4D8", lineHeight: 1.5 }}>{item}</span>
-              </div>
-            ))}
+          <div style={{
+            background: "#1A1A0A", border: "1px solid #7A6A00",
+            borderRadius: "var(--r-md)", padding: "18px 16px", marginBottom: "16px",
+          }}>
+            <p style={{ fontSize: "14px", fontWeight: 800, color: "#FEE500", margin: "0 0 14px" }}>
+              🔔 토크비 구독하면 매월 무료 자동 진단해드려요
+            </p>
+            체크리스트: GPT 노출 변화 추적 / 카카오톡 자동 발송 / 구독 유지 시 영구 무료
+            안내: ⓘ 구독 해지(채널 차단) 시 매월 자동 진단이 중단돼요
+            <a href="https://pf.kakao.com/_JxlWTX" target="_blank" rel="noopener noreferrer">
+              토크비 구독하기
+            </a>
           </div>
-
-          {/* 안내 문구 */}
-          <p style={{
-            fontSize: "11px", color: "#6B6B6B", margin: "0 0 12px", lineHeight: 1.6,
-          }}>
-            ⓘ 구독 해지(채널 차단) 시 매월 자동 진단이 중단돼요
-          </p>
-
-          {/* 버튼 */}
-          <a
-            href="https://pf.kakao.com/_JxlWTX"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "flex", alignItems: "center", justifyContent: "center", gap: "7px",
-              width: "100%", padding: "13px",
-              background: "#FEE500", color: "#1A1A00",
-              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 800,
-              border: "none", cursor: "pointer", textDecoration: "none",
-              boxSizing: "border-box",
-            }}
-          >
-            <KakaoIcon size={14} /> 토크비 구독하기
-          </a>
-        </div>
+        */}
 
         {/* ─── [4] PDF 다운로드 ──────────────────────────── */}
         <div style={{
