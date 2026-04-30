@@ -51,7 +51,7 @@ export default function InputPage() {
           <input
             type="text"
             id="store-name"
-            placeholder="예: 광장동 한미옥"
+            placeholder="예: 한미옥 광장점"
             style={inputStyle}
           />
         </div>

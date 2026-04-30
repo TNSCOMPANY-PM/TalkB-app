@@ -20,7 +20,7 @@ export default function MatchPage() {
           이 매장 정보가 맞으신가요?
         </h2>
         <p style={{ fontSize: "13.5px", color: "var(--ink-mid)", lineHeight: 1.6, margin: "0 0 16px" }}>
-          확인 후 AI 노출 진단을 시작합니다
+          맞으면 바로 AI 진단을 시작해요
         </p>
 
         {/* Store Card */}
@@ -39,9 +39,9 @@ export default function MatchPage() {
 
           <div style={{ padding: "20px" }}>
             <p style={{ fontSize: "20px", fontWeight: 800, color: "var(--ink)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
-              광장동 한미옥
+              한미옥 광장점
             </p>
-            <p style={{ fontSize: "13.5px", color: "var(--ink-mid)", margin: "0 0 2px" }}>서울 광진구 광장동 OO-OO</p>
+            <p style={{ fontSize: "13.5px", color: "var(--ink-mid)", margin: "0 0 2px" }}>서울 광진구 광장동 123-45</p>
             <p style={{ fontSize: "13.5px", color: "var(--ink-mid)", margin: "0 0 16px" }}>한식 · 한정식</p>
 
             {/* 소구점 뱃지 */}
@@ -62,7 +62,7 @@ export default function MatchPage() {
 
             {/* 예상 질문 5개 */}
             <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 8px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              ChatGPT에 던질 예상 질문 5개
+              ChatGPT에 보낼 질문 5개
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               {[
@@ -93,7 +93,7 @@ export default function MatchPage() {
           minHeight: "50px", textDecoration: "none", letterSpacing: "-0.01em",
           boxShadow: "var(--sh-accent)", marginBottom: "10px",
         }}>
-          맞아요, 진단 시작하기 →
+          맞아요! 지금 진단받기 →
         </Link>
 
         {/* 정보가 다른 경우 */}

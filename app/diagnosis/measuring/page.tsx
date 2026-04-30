@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/talkb/header";
+import Footer from "@/components/talkb/footer";
 
 const STEPS = [
   "매장 정보 분석",
@@ -60,10 +61,10 @@ export default function MeasuringPage() {
         </span>
 
         <h2 style={{ fontSize: "24px", fontWeight: 800, lineHeight: 1.3, letterSpacing: "-0.03em", margin: "0 0 10px", color: "var(--ink)" }}>
-          광장동 한미옥의<br />AI 노출을 진단 중입니다
+          한미옥 광장점의<br />AI 노출을 진단 중입니다
         </h2>
         <p style={{ fontSize: "14.5px", color: "var(--ink-mid)", lineHeight: 1.65, margin: "0 0 28px" }}>
-          약 30초 ~ 1분 정도 걸립니다
+          약 1분 소요
         </p>
 
         {/* Progress Bar */}
@@ -123,13 +124,15 @@ export default function MeasuringPage() {
           background: "var(--bg-dark)", borderRadius: "var(--r-md)", padding: "20px",
         }}>
           <p style={{ fontSize: "11px", color: "var(--accent)", fontWeight: 600, margin: "0 0 8px", letterSpacing: "0.04em" }}>
-            알고 계셨나요
+            잠깐, 이것 알고 계셨나요?
           </p>
           <p style={{ fontSize: "13.5px", color: "#D4D4D8", lineHeight: 1.65, margin: 0 }}>
             {INSIGHTS[insightIdx]}
           </p>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

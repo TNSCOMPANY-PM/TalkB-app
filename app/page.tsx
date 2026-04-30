@@ -37,7 +37,7 @@ export default function Home() {
             <span style={{ color: "var(--accent)" }}>손님이 검색해도 나올까요?</span>
           </p>
           <p style={{ fontSize: "12.5px", color: "#A3A3A3", margin: 0, lineHeight: 1.65 }}>
-            GPT는 사장님을 기억합니다. 토크비는 진짜 손님 환경에서 확인해드려요.
+            GPT는 사장님을 기억해요. 토크비는 처음 보는 손님 시점으로 확인해드려요.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function Home() {
           무료로 확인하기
         </Link>
         <p style={{ textAlign: "center", fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 14px" }}>
-          30초 안에 결과 확인 · 카카오로 1초 시작
+          1분 안에 결과 확인 · 카카오로 1초 시작
         </p>
 
         {/* 무료로 받는 것 */}

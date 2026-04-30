@@ -335,7 +335,7 @@ export default function ResultPage() {
               {answeredCount}/5
             </p>
             <p style={{ fontSize: "14px", color: "#D4D4D8", margin: "10px 0 0" }}>
-              5개 질문 중 {answeredCount}개에서 답변했어요
+              5개 질문 중 {answeredCount}개에서 우리 매장이 나왔어요
             </p>
           </div>
 

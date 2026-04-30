@@ -30,7 +30,11 @@ export default function Header({ isLoggedIn = false, stores = [] }: HeaderProps)
   const [hovered, setHovered] = useState(false);
   const logoHref = isLoggedIn ? "/mypage" : "/";
 
-  const badgeHref = stores.length === 0 ? "/diagnosis/input" : "/mypage";
+  const badgeHref = !isLoggedIn
+    ? "/diagnosis/login"
+    : stores.length === 0
+    ? "/diagnosis/input"
+    : "/mypage";
   const badgeText =
     stores.length === 0
       ? "매장 등록하기"
