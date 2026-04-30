@@ -215,7 +215,7 @@ export default function ResultPage() {
       <Header isLoggedIn={true} stores={[{ name: "한미옥 광장점" }]} />
 
       {/* 하단 Sticky CTA 높이만큼 패딩 확보 */}
-      <main style={{ padding: "20px 20px 100px" }}>
+      <main style={{ padding: "20px 20px 112px" }}>
 
         {/* ─── [1] 헤더 영역 ──────────────────────────────── */}
         <span style={{
@@ -417,11 +417,11 @@ export default function ResultPage() {
             <div key={cat.id} style={{ marginBottom: "20px" }}>
               {/* 카테고리 헤더 */}
               <div style={{
-                display: "flex", alignItems: "flex-start", justifyContent: "space-between",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
                 paddingBottom: "8px", marginBottom: "8px",
                 borderBottom: "1px solid var(--border)",
               }}>
-                <div>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "2px" }}>
                     <p style={{ fontSize: "13px", fontWeight: 800, color: "var(--ink)", margin: 0 }}>
                       {cat.name}
@@ -431,6 +431,7 @@ export default function ResultPage() {
                         fontSize: "10px", fontWeight: 700, color: "var(--accent)",
                         background: "var(--accent-soft)", padding: "1px 6px",
                         borderRadius: "999px", border: "1px solid rgba(232,93,58,0.2)",
+                        flexShrink: 0,
                       }}>
                         영향력 가장 큼
                       </span>
@@ -441,7 +442,7 @@ export default function ResultPage() {
                   </p>
                 </div>
                 <span style={{
-                  fontSize: "12px", fontWeight: 700, flexShrink: 0, marginLeft: "8px",
+                  fontSize: "12px", fontWeight: 700, flexShrink: 0, marginLeft: "12px",
                   color: allDone ? "var(--success)" : "var(--ink-muted)",
                   fontFamily: "var(--f-mono)",
                 }}>
@@ -511,15 +512,15 @@ export default function ResultPage() {
           );
         })}
 
-        {/* ─── [5] GPT 학습 안내 메시지 ────────────────────── */}
+        {/* ─── [5] GPT 학습 안내 메시지 (파란색) ─────────── */}
         <div style={{
-          background: "#EFF6FF", border: "1px solid #BFDBFE",
+          background: "#DBEAFE", border: "1px solid #93C5FD",
           borderRadius: "var(--r-md)", padding: "14px 16px", marginBottom: "24px",
         }}>
           <p style={{ fontSize: "13px", fontWeight: 700, color: "#1E3A8A", margin: "0 0 5px" }}>
             ⏳ GPT 학습에는 시간이 걸려요
           </p>
-          <p style={{ fontSize: "12.5px", color: "#1D4ED8", margin: 0, lineHeight: 1.65 }}>
+          <p style={{ fontSize: "12.5px", color: "#1E40AF", margin: 0, lineHeight: 1.65 }}>
             미션을 완료해도 GPT 노출 변화까지는 보통 2~4주가 소요됩니다.
             토크비가 매월 자동으로 다시 진단해드릴게요!
           </p>
