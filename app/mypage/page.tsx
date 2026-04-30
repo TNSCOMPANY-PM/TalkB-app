@@ -13,6 +13,7 @@ import {
   getCompletedMissions,
 } from "@/lib/missions-data";
 import type { MissionCategory } from "@/lib/missions-data";
+import { INVITE_COPY } from "@/types/rewards";
 
 // ── Mock 데이터 (동균팀장 Supabase 연동 시 교체) ────────────
 const MOCK_STORE = {
@@ -524,7 +525,7 @@ export default function MyPage() {
         </div>
 
         {/* ─── [6] 사장님 초대 현황 카드 ──────────────────── */}
-        <SectionLabel>🤝 함께 성장하기 현황</SectionLabel>
+        <SectionLabel>{INVITE_COPY.myPageCardTitle}</SectionLabel>
 
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
@@ -534,9 +535,9 @@ export default function MyPage() {
           {/* 현황 요약 */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
             <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
-              초대한 사장님:{" "}
+              {INVITE_COPY.inviteCountLabel}:{" "}
               <span style={{ color: MOCK_INVITED > 0 ? "var(--accent)" : "var(--ink-muted)", fontFamily: "var(--f-mono)" }}>
-                {MOCK_INVITED}분
+                {MOCK_INVITED}{INVITE_COPY.inviteCountUnit}
               </span>
             </p>
           </div>
@@ -575,12 +576,9 @@ export default function MyPage() {
             border: "1px solid var(--border-soft)",
           }}>
             <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 6px" }}>
-              사장님 1분 초대 = 매번 받는 혜택 (택 1)
+              {INVITE_COPY.rewardConditionTitle}
             </p>
-            {[
-              "🏪 매장 1개 추가 등록 (최대 3매장까지)",
-              "🎫 진단권 1개 추가 (월 최대 5개)",
-            ].map((item) => (
+            {INVITE_COPY.inviterRewards.map((item) => (
               <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "4px" }}>
                 <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
                 <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>{item}</span>
@@ -598,7 +596,7 @@ export default function MyPage() {
               border: "none", cursor: "pointer", marginBottom: inviteOpen ? "12px" : 0,
             }}
           >
-            사장님 초대하기 {inviteOpen ? "▲" : "→"}
+            {INVITE_COPY.primaryButton} {inviteOpen ? "▲" : ""}
           </button>
 
           {/* 초대 링크 + 공유 (펼침) */}
@@ -607,8 +605,14 @@ export default function MyPage() {
               background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
               padding: "12px", border: "1px solid var(--border-soft)",
             }}>
-              <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 10px" }}>
-                🎉 초대받은 사장님 혜택: 가입 즉시 진단권 1회 제공!
+              <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 6px", fontWeight: 700 }}>
+                {INVITE_COPY.inviteeRewardTitle}
+              </p>
+              {INVITE_COPY.inviteeRewards.map((item) => (
+                <p key={item} style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 8px" }}>{item}</p>
+              ))}
+              <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: "0 0 10px", lineHeight: 1.5 }}>
+                {INVITE_COPY.rewardCondition}
               </p>
               <button
                 onClick={handleShare}
@@ -618,7 +622,7 @@ export default function MyPage() {
                   border: "none", cursor: "pointer",
                 }}
               >
-                💬 사장님 초대하기
+                💬 {INVITE_COPY.primaryButton}
               </button>
             </div>
           )}

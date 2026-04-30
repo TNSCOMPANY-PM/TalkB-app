@@ -22,6 +22,7 @@ import {
 import type { Mission } from "@/lib/missions-data";
 import type { QuestionResult } from "@/types/diagnosis";
 import InstallPrompt from "@/components/talkb/install-prompt";
+import { INVITE_COPY } from "@/types/rewards";
 
 // ── 목업 측정 결과 (동균팀장 GPT API 연동 시 QuestionResult[] 형태로 교체) ──
 const measurementResults: QuestionResult[] = [
@@ -752,10 +753,10 @@ export default function ResultPage() {
           boxShadow: "var(--sh-sm)",
         }}>
           <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: "0 0 4px", lineHeight: 1.55 }}>
-            🤝 함께 성장하고 싶은 사장님이 있으신가요?
+            {INVITE_COPY.cardHeader}
           </p>
           <p style={{ fontSize: "12.5px", color: "var(--ink-mid)", margin: "0 0 14px", lineHeight: 1.6 }}>
-            토크비를 소개해드리고 사장님도 추가 혜택을 받아보세요
+            {INVITE_COPY.cardSubheader}
           </p>
 
           {/* 사장님 혜택 */}
@@ -765,12 +766,9 @@ export default function ResultPage() {
             border: "1px solid var(--border-soft)",
           }}>
             <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 8px" }}>
-              🎁 사장님 혜택 (택 1)
+              🎁 {INVITE_COPY.rewardConditionTitle}
             </p>
-            {[
-              "🏪 매장 1개 추가 등록 (최대 3매장까지)",
-              "🎫 진단권 1개 추가 (월 최대 5개)",
-            ].map((item) => (
+            {INVITE_COPY.inviterRewards.map((item) => (
               <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "5px" }}>
                 <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
                 <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>{item}</span>
@@ -783,14 +781,17 @@ export default function ResultPage() {
             background: "#FFF4E8", border: "1px solid #FFD9AD",
             borderRadius: "var(--r-sm)", padding: "8px 12px", marginBottom: "6px",
           }}>
-            <p style={{ fontSize: "12px", fontWeight: 700, color: "#B45309", margin: 0 }}>
-              🎉 초대받은 사장님 혜택: 가입 즉시 진단권 1회 제공!
+            <p style={{ fontSize: "12px", fontWeight: 700, color: "#B45309", margin: "0 0 4px" }}>
+              {INVITE_COPY.inviteeRewardTitle}
             </p>
+            {INVITE_COPY.inviteeRewards.map((item) => (
+              <p key={item} style={{ fontSize: "12px", color: "#B45309", margin: 0 }}>{item}</p>
+            ))}
           </div>
 
           {/* 조건 안내 */}
           <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: "0 0 10px", lineHeight: 1.55 }}>
-            ⚠️ 보상 조건: 초대받은 사장님이 첫 진단 완료 후 지급됩니다
+            {INVITE_COPY.rewardCondition}
           </p>
 
           <button
@@ -802,7 +803,7 @@ export default function ResultPage() {
               border: "none", cursor: "pointer",
             }}
           >
-            <KakaoIcon size={13} /> 사장님 초대하기
+            <KakaoIcon size={13} /> {INVITE_COPY.primaryButton}
           </button>
         </div>
 
