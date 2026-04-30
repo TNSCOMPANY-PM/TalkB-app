@@ -1,7 +1,7 @@
 {
   "name": "토크비 (TalkB)",
   "short_name": "토크비",
-  "description": "외식업 전문 AI 노출 솔루션 - 사장님 매장이 GPT에 나오는지 진단",
+  "description": "GPT에게 우리 매장을 말하게 하다 - 외식업 사장님을 위한 AI 노출 솔루션",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

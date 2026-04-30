@@ -58,7 +58,7 @@ export default function Header({ isLoggedIn = false, stores = [] }: HeaderProps)
           <span style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink-mid)", letterSpacing: "-0.01em" }}>토크비</span>
         </div>
         <p style={{ fontSize: "10px", fontWeight: 600, color: "var(--ink-muted)", margin: "2px 0 0", letterSpacing: "0.01em" }}>
-          외식업 전문 AI 노출 솔루션
+          GPT에게 우리 매장을 말하게 하다
         </p>
       </Link>
 

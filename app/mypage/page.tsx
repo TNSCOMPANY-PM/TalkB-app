@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Header from "@/components/talkb/header";
 import Footer from "@/components/talkb/footer";
 import PwaBanner from "@/components/talkb/pwa-banner";
+import {
+  MISSIONS,
+  getMissionsByCategory,
+  getCategoriesInOrder,
+  getCompletedMissions,
+} from "@/lib/missions-data";
+import type { MissionCategory } from "@/lib/missions-data";
 
 // ── Mock 데이터 (동균팀장 Supabase 연동 시 교체) ────────────
 const MOCK_STORE = {
@@ -24,6 +31,8 @@ const MOCK_LAST_DIAGNOSIS = {
 };
 
 const REGISTERED_COUNT = 1; // 등록 매장 수 (1 | 2 | 3)
+
+const MOCK_INVITED = 0; // 초대한 친구 수 (mock)
 
 // ── 유틸 함수 ────────────────────────────────────────────────
 function getNextDiagnosisDate(): string {
@@ -60,11 +69,22 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 export default function MyPage() {
   const router = useRouter();
   const [editToast, setEditToast] = useState(false);
+  const [completedIds, setCompletedIds] = useState<string[]>([]);
+  const [inviteOpen, setInviteOpen] = useState(false);
+
+  useEffect(() => {
+    setCompletedIds(getCompletedMissions());
+  }, []);
 
   const handleEditStore = () => {
     setEditToast(true);
     setTimeout(() => setEditToast(false), 2500);
   };
+
+  const orderedCategories = getCategoriesInOrder();
+  const totalMissions = MISSIONS.length;
+  const completedCount = completedIds.length;
+  const totalPct = Math.round((completedCount / totalMissions) * 100);
 
   const nextDiagDate = getNextDiagnosisDate();
   const relDays = getRelativeDays(MOCK_LAST_DIAGNOSIS.date);
@@ -365,6 +385,209 @@ export default function MyPage() {
           >
             전체 결과 보기 →
           </Link>
+        </div>
+
+        {/* ─── [5] 미션 진행률 카드 ──────────────────────── */}
+        <SectionLabel>🎯 GPT 노출 기본기</SectionLabel>
+
+        <div style={{
+          background: "var(--white)", border: "1px solid var(--border)",
+          borderRadius: "var(--r-md)", padding: "16px", marginBottom: "28px",
+          boxShadow: "var(--sh-sm)",
+        }}>
+          {/* 종합 진척도 */}
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "8px" }}>
+            <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
+              전체 미션 진척도
+            </p>
+            <span style={{
+              fontSize: "13px", fontWeight: 700,
+              color: completedCount === totalMissions ? "var(--success)" : "var(--accent)",
+              fontFamily: "var(--f-mono)",
+            }}>
+              {completedCount}/{totalMissions}
+            </span>
+          </div>
+          <div style={{
+            height: "8px", background: "var(--bg-deep)", borderRadius: "999px",
+            overflow: "hidden", marginBottom: "4px",
+          }}>
+            <div style={{
+              height: "100%", background: "var(--accent)", borderRadius: "999px",
+              width: `${totalPct}%`, transition: "width 0.4s ease",
+            }} />
+          </div>
+          <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: "0 0 18px", textAlign: "right" }}>
+            {totalPct}% 완료
+          </p>
+
+          {/* 카테고리별 진척도 */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "16px" }}>
+            {orderedCategories.map((cat, idx) => {
+              const catMissions = getMissionsByCategory(cat.id as MissionCategory);
+              const catCompleted = catMissions.filter((m) => completedIds.includes(m.id)).length;
+              const catPct = Math.round((catCompleted / catMissions.length) * 100);
+              const numeral = ["①", "②", "③", "④", "⑤"][idx] ?? `${idx + 1}.`;
+
+              return (
+                <div key={cat.id}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "5px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <span style={{ fontSize: "12px", color: "var(--ink-muted)" }}>{numeral}</span>
+                      <span style={{ fontSize: "12.5px", fontWeight: 600, color: "var(--ink)" }}>{cat.name}</span>
+                      {cat.importance === 3 && (
+                        <span style={{
+                          fontSize: "9px", fontWeight: 700, color: "var(--accent)",
+                          background: "var(--accent-soft)", padding: "1px 5px",
+                          borderRadius: "999px", border: "1px solid rgba(232,93,58,0.2)",
+                        }}>
+                          영향력 큼
+                        </span>
+                      )}
+                    </div>
+                    <span style={{
+                      fontSize: "11px", fontWeight: 700,
+                      color: catCompleted === catMissions.length ? "var(--success)" : "var(--ink-muted)",
+                      fontFamily: "var(--f-mono)",
+                    }}>
+                      {catCompleted}/{catMissions.length}
+                    </span>
+                  </div>
+                  <div style={{
+                    height: "5px", background: "var(--bg-deep)", borderRadius: "999px", overflow: "hidden",
+                  }}>
+                    <div style={{
+                      height: "100%",
+                      background: catCompleted === catMissions.length ? "var(--success)" : "var(--accent)",
+                      borderRadius: "999px",
+                      width: `${catPct}%`,
+                      transition: "width 0.4s ease",
+                    }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* 전체 미션 보기 */}
+          <Link
+            href="/diagnosis/result"
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              padding: "11px", background: "var(--bg-soft)", color: "var(--ink)",
+              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 700,
+              border: "1px solid var(--border)", textDecoration: "none",
+            }}
+          >
+            전체 미션 보기 →
+          </Link>
+        </div>
+
+        {/* ─── [6] 친구 초대 현황 카드 ────────────────────── */}
+        <SectionLabel>🎉 친구 초대 현황</SectionLabel>
+
+        <div style={{
+          background: "var(--white)", border: "1px solid var(--border)",
+          borderRadius: "var(--r-md)", padding: "16px", marginBottom: "28px",
+          boxShadow: "var(--sh-sm)",
+        }}>
+          {/* 현황 요약 */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
+            <p style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
+              초대한 친구:{" "}
+              <span style={{ color: MOCK_INVITED > 0 ? "var(--accent)" : "var(--ink-muted)", fontFamily: "var(--f-mono)" }}>
+                {MOCK_INVITED}명
+              </span>
+            </p>
+          </div>
+
+          {/* 받은 보상 현황 */}
+          <div style={{
+            background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
+            padding: "10px 12px", marginBottom: "12px",
+            border: "1px solid var(--border-soft)",
+          }}>
+            <p style={{ fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)", margin: "0 0 7px" }}>
+              받은 보상
+            </p>
+            <div style={{ display: "flex", gap: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span style={{ fontSize: "12px" }}>🏪</span>
+                <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>
+                  매장 추가{" "}
+                  <strong style={{ color: "var(--ink)", fontFamily: "var(--f-mono)" }}>0개</strong>
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span style={{ fontSize: "12px" }}>🎫</span>
+                <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>
+                  진단권{" "}
+                  <strong style={{ color: "var(--ink)", fontFamily: "var(--f-mono)" }}>0개</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* 초대 혜택 요약 */}
+          <div style={{
+            background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
+            padding: "10px 12px", marginBottom: "12px",
+            border: "1px solid var(--border-soft)",
+          }}>
+            <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 6px" }}>
+              친구 1명 초대 = 매번 받는 혜택 (택 1)
+            </p>
+            {[
+              "🏪 매장 1개 추가 등록 (최대 3매장까지)",
+              "🎫 진단권 1개 추가 (월 최대 5개)",
+            ].map((item) => (
+              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "4px" }}>
+                <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
+                <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>{item}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* 초대하기 버튼 */}
+          <button
+            onClick={() => setInviteOpen((v) => !v)}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
+              width: "100%", padding: "12px", background: "var(--accent)", color: "#FFFFFF",
+              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 800,
+              border: "none", cursor: "pointer", marginBottom: inviteOpen ? "12px" : 0,
+            }}
+          >
+            친구 초대하기 {inviteOpen ? "▲" : "→"}
+          </button>
+
+          {/* 초대 링크 + 공유 (펼침) */}
+          {inviteOpen && (
+            <div style={{
+              background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
+              padding: "12px", border: "1px solid var(--border-soft)",
+            }}>
+              <p style={{ fontSize: "12px", color: "var(--ink-mid)", margin: "0 0 10px" }}>
+                🎁 친구도 가입 즉시 경쟁사 분석 1회를 받아요!
+              </p>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <button style={{
+                  flex: 1, padding: "10px", background: "var(--bg-deep)", color: "var(--ink)",
+                  borderRadius: "var(--r-sm)", fontSize: "12.5px", fontWeight: 700,
+                  border: "1px solid var(--border)", cursor: "pointer",
+                }}>
+                  🔗 링크 복사
+                </button>
+                <button style={{
+                  flex: 1, padding: "10px", background: "var(--kakao)", color: "var(--kakao-text)",
+                  borderRadius: "var(--r-sm)", fontSize: "12.5px", fontWeight: 700,
+                  border: "none", cursor: "pointer",
+                }}>
+                  💬 카카오톡 공유
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ─── PWA 설치 배너 ──────────────────────────────── */}

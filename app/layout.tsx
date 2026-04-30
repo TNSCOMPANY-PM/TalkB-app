@@ -3,8 +3,8 @@ import "./globals.css";
 import DevNav from "@/components/talkb/dev-nav";
 
 export const metadata: Metadata = {
-  title: "TalkB · 우리 매장 AI 노출 무료 진단",
-  description: "AI는 지금 사장님 옆집을 추천하고 있습니다. 30초 무료 진단으로 확인하세요.",
+  title: "토크비 (TalkB) | GPT에게 우리 매장을 말하게 하다",
+  description: "GPT에게 우리 매장을 말하게 하다 - 외식업 사장님을 위한 AI 노출 솔루션",
 };
 
 export default function RootLayout({
