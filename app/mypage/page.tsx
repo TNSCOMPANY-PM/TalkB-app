@@ -153,15 +153,28 @@ export default function MyPage() {
             <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 8px" }}>
               친구 1명 초대 = 매번 받는 혜택 (택 1)
             </p>
-            {[
-              "🏪 매장 1개 추가 등록 (최대 3매장까지)",
-              "🎯 경쟁사 1곳 심층 분석 리포트",
-            ].map((item) => (
-              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "5px" }}>
-                <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
-                <span style={{ fontSize: "12.5px", color: "var(--ink-mid)", lineHeight: 1.45 }}>{item}</span>
-              </div>
-            ))}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "5px" }}>
+              <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
+              <span style={{ fontSize: "12.5px", color: "var(--ink-mid)", lineHeight: 1.45 }}>🏪 매장 1개 추가 등록 (최대 3매장까지)</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "2px" }}>
+              <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
+              <span style={{ fontSize: "12.5px", color: "var(--ink-mid)", lineHeight: 1.45 }}>🎫 진단권 1개 추가 (월 최대 5개)</span>
+            </div>
+            <div style={{
+              marginLeft: "14px", marginTop: "6px",
+              paddingLeft: "10px", borderLeft: "2px solid var(--border)",
+            }}>
+              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 700, margin: "0 0 2px" }}>
+                → 매월 자동 진단을 기다리지 않고
+              </p>
+              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 700, margin: "0 0 6px" }}>
+                &nbsp;&nbsp;&nbsp;원할 때 즉시 다시 진단받기!
+              </p>
+              <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: 0 }}>
+                진단권으로 미션 완료 후 GPT 노출 변화를 즉시 확인하세요
+              </p>
+            </div>
           </div>
 
           {/* 양방향 보상 강조 */}

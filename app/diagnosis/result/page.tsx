@@ -18,39 +18,45 @@ import {
   toggleMissionCompletion,
 } from "@/lib/missions-data";
 import type { Mission } from "@/lib/missions-data";
+import type { QuestionResult } from "@/types/diagnosis";
 import InstallPrompt from "@/components/talkb/install-prompt";
 
-// ── 목업 측정 결과 (추후 GPT API 연동) ─────────────────────
-const measurementResults = [
+// ── 목업 측정 결과 (동균팀장 GPT API 연동 시 QuestionResult[] 형태로 교체) ──
+const measurementResults: QuestionResult[] = [
   {
     depth: "D1",
     type: "지역+업종",
     question: "광장동 분위기 좋은 한식당 추천해줘",
     answered: false,
+    recommendedStores: ["이리스 한정식", "광장동 명가", "수라온 한정식"],
   },
   {
     depth: "D2",
     type: "의도형",
     question: "광장동 가족 모임하기 좋은 식당 추천해줘",
     answered: false,
+    recommendedStores: ["광장동 한정식 명가", "장원 가든", "수라온 한정식"],
   },
   {
     depth: "D2",
     type: "의도형",
     question: "광장동 회식 장소 어디가 좋아?",
     answered: false,
+    recommendedStores: ["광장동 명가", "이리스 한정식", "장원 가든"],
   },
   {
     depth: "D2",
     type: "의도형",
     question: "광장동 룸 있는 한정식 맛집 알려줘",
     answered: false,
+    recommendedStores: ["수라온 한정식", "광장동 명가", "한정식 진"],
   },
   {
     depth: "D3",
     type: "매장명+상세",
     question: "한미옥 영업시간이랑 주차 알려줘",
     answered: true,
+    recommendedStores: ["한미옥 광장점"],
   },
 ];
 
@@ -271,36 +277,60 @@ export default function ResultPage() {
           </div>
 
           {/* 개별 질문 결과 */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {measurementResults.map((q, i) => (
               <div key={i} style={{
-                display: "flex", alignItems: "flex-start", gap: "8px",
-                padding: "10px 12px",
+                padding: "12px",
                 background: "rgba(255,255,255,0.04)",
                 borderRadius: "var(--r-sm)",
                 border: `1px solid ${q.answered ? "rgba(22,163,74,0.25)" : "rgba(255,255,255,0.06)"}`,
               }}>
-                <span style={{
-                  fontSize: "10px", fontWeight: 700, padding: "2px 6px",
-                  borderRadius: "4px", flexShrink: 0, marginTop: "1px",
-                  background: "rgba(255,255,255,0.08)", color: "#888",
-                  fontFamily: "var(--f-mono)",
-                }}>
-                  {q.depth}
-                </span>
-                <span style={{
-                  fontSize: "12.5px", color: "#D4D4D8", flex: 1, lineHeight: 1.5,
-                }}>
-                  {q.question}
-                </span>
-                <span style={{
-                  fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap", flexShrink: 0,
-                  color: q.answered ? "var(--success)" : "#6B6B6B",
-                  background: q.answered ? "rgba(22,163,74,0.15)" : "rgba(255,255,255,0.05)",
-                  padding: "3px 8px", borderRadius: "999px", marginTop: "1px",
-                }}>
-                  {q.answered ? "✓ 노출됐어요" : "✗ 노출 안 됨"}
-                </span>
+                {/* 질문 헤더 */}
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: q.answered ? 0 : "10px" }}>
+                  <span style={{
+                    fontSize: "10px", fontWeight: 700, padding: "2px 6px",
+                    borderRadius: "4px", flexShrink: 0, marginTop: "2px",
+                    background: "rgba(255,255,255,0.08)", color: "#888",
+                    fontFamily: "var(--f-mono)",
+                  }}>
+                    {q.depth}
+                  </span>
+                  <span style={{
+                    fontSize: "12.5px", color: "#D4D4D8", flex: 1, lineHeight: 1.5,
+                  }}>
+                    {q.question}
+                  </span>
+                  <span style={{
+                    fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap", flexShrink: 0,
+                    color: q.answered ? "var(--success)" : "#6B6B6B",
+                    background: q.answered ? "rgba(22,163,74,0.15)" : "rgba(255,255,255,0.05)",
+                    padding: "3px 8px", borderRadius: "999px", marginTop: "1px",
+                  }}>
+                    {q.answered ? "✓ 노출됐어요" : "✗ 노출 안 됨"}
+                  </span>
+                </div>
+
+                {/* 노출 안 됨인 경우: GPT 추천 매장 표시 */}
+                {!q.answered && q.recommendedStores && q.recommendedStores.length > 0 && (
+                  <div style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                    borderRadius: "6px",
+                    padding: "8px 10px",
+                  }}>
+                    <p style={{
+                      fontSize: "10.5px", fontWeight: 700, color: "#888",
+                      margin: "0 0 5px", letterSpacing: "0.02em",
+                    }}>
+                      💡 GPT가 추천한 매장
+                    </p>
+                    <p style={{
+                      fontSize: "12px", color: "#A3A3A3", margin: 0, lineHeight: 1.6,
+                    }}>
+                      {q.recommendedStores.join(", ")}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -320,9 +350,61 @@ export default function ResultPage() {
               이 진단은 그 손님 시점으로 측정한 결과입니다.
             </p>
           </div>
+
+          {/* 종합 메시지 */}
+          <div style={{
+            marginTop: "12px", padding: "12px 14px",
+            background: "rgba(232,93,58,0.08)", borderRadius: "var(--r-sm)",
+            border: "1px solid rgba(232,93,58,0.2)",
+          }}>
+            <p style={{ fontSize: "12.5px", color: "#F4A580", margin: 0, lineHeight: 1.7 }}>
+              💡 GPT가 다른 매장들은 자주 추천하는데 사장님 매장은 빠져있어요.{" "}
+              <strong style={{ color: "#FAFAFA" }}>아래 체크리스트로 그 차이를 만들어보세요.</strong>
+            </p>
+          </div>
         </div>
 
-        {/* ─── [3] PDF 다운로드 (측정 결과 바로 아래) ──────── */}
+        {/* ─── [3] 카카오톡 채널 친구 추가 카드 ───────────── */}
+        <div style={{
+          background: "#1A1A0A", border: "1px solid #7A6A00",
+          borderRadius: "var(--r-md)", padding: "18px 16px", marginBottom: "16px",
+        }}>
+          <div style={{ marginBottom: "10px" }}>
+            <p style={{
+              fontSize: "15px", fontWeight: 800, color: "#FEE500",
+              margin: "0 0 4px", letterSpacing: "-0.02em",
+            }}>
+              💛 카카오톡 채널 추가하고
+            </p>
+            <p style={{
+              fontSize: "15px", fontWeight: 800, color: "#FEE500",
+              margin: "0 0 10px", letterSpacing: "-0.02em",
+            }}>
+              매월 자동 진단 받기
+            </p>
+            <p style={{ fontSize: "12.5px", color: "#A3A3A3", margin: 0, lineHeight: 1.65 }}>
+              사장님 매장의 GPT 노출 변화를<br />
+              매월 카카오톡으로 받아보세요
+            </p>
+          </div>
+          <a
+            href="https://pf.kakao.com/_JxlWTX"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: "7px",
+              width: "100%", padding: "13px",
+              background: "#FEE500", color: "#1A1A00",
+              borderRadius: "var(--r-sm)", fontSize: "13px", fontWeight: 800,
+              border: "none", cursor: "pointer", textDecoration: "none",
+              boxSizing: "border-box",
+            }}
+          >
+            <KakaoIcon size={14} /> 📢 토크비 채널 추가하기
+          </a>
+        </div>
+
+        {/* ─── [4] PDF 다운로드 ──────────────────────────── */}
         <div style={{
           background: "#FFF7F3", border: "1px solid rgba(232,93,58,0.2)",
           borderRadius: "var(--r-md)", padding: "14px 16px", marginBottom: "28px",
@@ -351,8 +433,7 @@ export default function ResultPage() {
           </div>
         </div>
 
-        {/* ─── [4] 15개 미션 체크리스트 ───────────────────── */}
-        {/* 섹션 헤더 */}
+        {/* ─── [5] 15개 미션 체크리스트 ───────────────────── */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
           <p style={{
             fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)",
@@ -513,7 +594,7 @@ export default function ResultPage() {
           );
         })}
 
-        {/* ─── [5] GPT 학습 안내 메시지 (파란색) ─────────── */}
+        {/* ─── [6] GPT 학습 안내 메시지 (파란색) ─────────── */}
         <div style={{
           background: "#DBEAFE", border: "1px solid #93C5FD",
           borderRadius: "var(--r-md)", padding: "14px 16px", marginBottom: "24px",
@@ -527,7 +608,7 @@ export default function ResultPage() {
           </p>
         </div>
 
-        {/* ─── [6] 친구 초대 블록 ──────────────────────────── */}
+        {/* ─── [7] 친구 초대 블록 ──────────────────────────── */}
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
           borderRadius: "var(--r-md)", padding: "16px",
@@ -543,18 +624,32 @@ export default function ResultPage() {
             padding: "10px 14px", marginBottom: "8px",
             border: "1px solid var(--border-soft)",
           }}>
-            <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 6px" }}>
+            <p style={{ fontSize: "12px", fontWeight: 800, color: "var(--ink)", margin: "0 0 8px" }}>
               친구 1명 초대 = 매번 받는 혜택 (택 1)
             </p>
-            {[
-              "🏪 매장 1개 추가 등록 (최대 3매장까지)",
-              "🎯 경쟁사 1곳 심층 분석 리포트",
-            ].map((item) => (
-              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "4px" }}>
-                <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
-                <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>{item}</span>
-              </div>
-            ))}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "5px" }}>
+              <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
+              <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>🏪 매장 1개 추가 등록 (최대 3매장까지)</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "2px" }}>
+              <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
+              <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>🎫 진단권 1개 추가 (월 최대 5개)</span>
+            </div>
+            {/* 진단권 설명 */}
+            <div style={{
+              marginLeft: "14px", marginTop: "6px",
+              paddingLeft: "10px", borderLeft: "2px solid var(--border)",
+            }}>
+              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 700, margin: "0 0 2px" }}>
+                → 매월 자동 진단을 기다리지 않고
+              </p>
+              <p style={{ fontSize: "11.5px", color: "var(--accent)", fontWeight: 700, margin: "0 0 6px" }}>
+                &nbsp;&nbsp;&nbsp;원할 때 즉시 다시 진단받기!
+              </p>
+              <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: 0 }}>
+                진단권으로 미션 완료 후 GPT 노출 변화를 즉시 확인하세요
+              </p>
+            </div>
           </div>
 
           {/* 양방향 보상 */}
@@ -592,7 +687,7 @@ export default function ResultPage() {
 
       <InstallPrompt autoDelay={8000} />
 
-      {/* ─── [7] Sticky CTA (모바일 하단 고정) ──────────── */}
+      {/* ─── [8] Sticky CTA (모바일 하단 고정) ──────────── */}
       <div style={{
         position: "fixed", bottom: 0,
         left: "50%", transform: "translateX(-50%)",
