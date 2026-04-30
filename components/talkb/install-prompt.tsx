@@ -20,7 +20,40 @@ export interface InstallPromptProps {
 
 // ── 상수 ────────────────────────────────────────────────────
 const DISMISSED_KEY = "talkb_install_dismissed_at";
+const INSTALLED_KEY = "pwa_installed";
+const INSTALLED_AT_KEY = "pwa_installed_at";
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+
+// ── PWA 설치 완료 감지 (3가지 방법) ────────────────────────
+export function isPwaInstalled(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    // 방법 1: standalone display mode (Android/iOS 모두 커버)
+    if (window.matchMedia("(display-mode: standalone)").matches) return true;
+    // 방법 2: localStorage 플래그 (앱 설치 버튼 클릭 또는 appinstalled 이벤트)
+    if (localStorage.getItem(INSTALLED_KEY) === "true") return true;
+    // 방법 3: iOS Safari navigator.standalone
+    if ((window.navigator as unknown as { standalone?: boolean }).standalone === true) return true;
+  } catch { /* ignore */ }
+  return false;
+}
+
+function markInstalled(): void {
+  try {
+    localStorage.setItem(INSTALLED_KEY, "true");
+    localStorage.setItem(INSTALLED_AT_KEY, new Date().toISOString());
+  } catch { /* ignore */ }
+}
+
+// ── 개발용 디버그 헬퍼 (콘솔에서 resetPwaInstallStatus() 호출) ──
+if (typeof window !== "undefined") {
+  (window as unknown as Record<string, unknown>).resetPwaInstallStatus = () => {
+    [INSTALLED_KEY, INSTALLED_AT_KEY, "talkb_banner_dismissed_at", DISMISSED_KEY].forEach(
+      (k) => localStorage.removeItem(k)
+    );
+    console.log("✅ PWA 설치 상태 리셋 완료. 새로고침 후 확인하세요.");
+  };
+}
 
 // ── 유틸 ────────────────────────────────────────────────────
 export function detectDevice(): DeviceType {
@@ -86,6 +119,13 @@ export default function InstallPrompt({
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
 
+  // appinstalled 이벤트 — 브라우저 메뉴에서 직접 설치한 경우 대비
+  useEffect(() => {
+    const handler = () => markInstalled();
+    window.addEventListener("appinstalled", handler);
+    return () => window.removeEventListener("appinstalled", handler);
+  }, []);
+
   // 표시 로직
   useEffect(() => {
     const dev = detectDevice();
@@ -97,9 +137,9 @@ export default function InstallPrompt({
       return;
     }
 
-    // 자동 모드
+    // 자동 모드: 설치 완료 / dismissed / desktop 이면 표시 안 함
+    if (isPwaInstalled()) return;
     if (wasDismissedRecently()) return;
-    if (window.matchMedia("(display-mode: standalone)").matches) return;
     if (dev === "desktop") return;
 
     setDevice(dev);
@@ -118,9 +158,10 @@ export default function InstallPrompt({
     if (device === "android-chrome") {
       if (deferredPromptRef.current) {
         await deferredPromptRef.current.prompt();
-        await deferredPromptRef.current.userChoice;
+        const { outcome } = await deferredPromptRef.current.userChoice;
         deferredPromptRef.current = null;
-        dismiss(); // 수락/거절 모두 닫기
+        if (outcome === "accepted") markInstalled();
+        dismiss();
       } else {
         // beforeinstallprompt 미발생 시 (이미 설치됐거나 기준 미충족)
         setPostClickMsg("이미 설치됐거나 브라우저에서 설치를 지원하지 않아요.");

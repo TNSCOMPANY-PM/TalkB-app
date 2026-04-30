@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import InstallPrompt, { detectDevice } from "@/components/talkb/install-prompt";
+import InstallPrompt, { detectDevice, isPwaInstalled } from "@/components/talkb/install-prompt";
 
 const BANNER_KEY = "talkb_banner_dismissed_at";
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
@@ -11,8 +11,8 @@ export default function PwaBanner() {
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    // PWA standalone 모드 → 이미 설치됨, 표시 안 함
-    if (window.matchMedia("(display-mode: standalone)").matches) return;
+    // PWA 설치 완료 → 표시 안 함 (standalone / localStorage 플래그 / iOS navigator.standalone)
+    if (isPwaInstalled()) return;
     // 데스크탑 → 표시 안 함
     if (detectDevice() === "desktop") return;
     // 배너 X 클릭 후 7일 이내 → 표시 안 함
