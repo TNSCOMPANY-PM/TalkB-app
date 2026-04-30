@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Header from "@/components/talkb/header";
 import Footer from "@/components/talkb/footer";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -12,10 +13,11 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import {
-  getMissionsByCategory,
-  getCategoriesInOrder,
+  MISSIONS,
   getCompletedMissions,
   toggleMissionCompletion,
+  getNextMission,
+  MISSION_ORDER_BY_DIFFICULTY,
 } from "@/lib/missions-data";
 import type { Mission } from "@/lib/missions-data";
 import type { QuestionResult } from "@/types/diagnosis";
@@ -60,6 +62,22 @@ const measurementResults: QuestionResult[] = [
   },
 ];
 
+// Tier 1 미션 IDs (5분짜리 3개)
+const TIER1_IDS = ["m1", "m12", "m6"];
+
+const TOTAL_MISSIONS = 15;
+
+function getCelebrationMsg(missionId: string, newCompleted: string[]): string {
+  const tier1Done = TIER1_IDS.every((id) => newCompleted.includes(id));
+  if (tier1Done && TIER1_IDS.includes(missionId)) {
+    return "🎉 5분 미션 모두 완료! 이제 조금 더 깊이 들어가볼까요?";
+  }
+  if (newCompleted.length === 1) {
+    return "🎉 첫 미션 완료! 이렇게 하나씩 해보세요";
+  }
+  return "🎉 잘하셨어요! 다음 미션을 준비했어요";
+}
+
 function KakaoIcon({ size = 13 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 18 18" fill="currentColor">
@@ -79,7 +97,6 @@ function MissionGuide({ mission }: { mission: Mission }) {
       flexDirection: "column",
       gap: "14px",
     }}>
-      {/* 왜 필요한가요? */}
       <div>
         <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", margin: "0 0 5px" }}>
           🎯 왜 필요한가요?
@@ -89,7 +106,6 @@ function MissionGuide({ mission }: { mission: Mission }) {
         </p>
       </div>
 
-      {/* 어떻게 확인하나요? */}
       <div>
         <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", margin: "0 0 6px" }}>
           ✅ 어떻게 확인하나요?
@@ -103,7 +119,6 @@ function MissionGuide({ mission }: { mission: Mission }) {
         </ol>
       </div>
 
-      {/* 안 되어 있다면? */}
       <div>
         <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--ink)", margin: "0 0 6px" }}>
           🛠️ 안 되어 있다면?
@@ -117,7 +132,6 @@ function MissionGuide({ mission }: { mission: Mission }) {
         </ol>
       </div>
 
-      {/* 템플릿 (있는 경우) */}
       {mission.template && (
         <div style={{
           background: "var(--white)",
@@ -140,7 +154,6 @@ function MissionGuide({ mission }: { mission: Mission }) {
         </div>
       )}
 
-      {/* 좋은 예시 */}
       {mission.goodExample && (
         <div style={{
           background: "#F0FDF4", border: "1px solid #BBF7D0",
@@ -158,7 +171,6 @@ function MissionGuide({ mission }: { mission: Mission }) {
         </div>
       )}
 
-      {/* 나쁜 예시 */}
       {mission.badExample && (
         <div style={{
           background: "#FFF1F2", border: "1px solid #FECDD3",
@@ -176,7 +188,6 @@ function MissionGuide({ mission }: { mission: Mission }) {
         </div>
       )}
 
-      {/* 주의사항 */}
       {mission.warning && (
         <div style={{
           background: "#FFFBEB", border: "1px solid #FDE68A",
@@ -188,7 +199,6 @@ function MissionGuide({ mission }: { mission: Mission }) {
         </div>
       )}
 
-      {/* 팁 */}
       {mission.tip && (
         <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0, fontStyle: "italic" }}>
           💡 팁: {mission.tip}
@@ -198,11 +208,12 @@ function MissionGuide({ mission }: { mission: Mission }) {
   );
 }
 
-const TOTAL_MISSIONS = 15;
-
 export default function ResultPage() {
   const router = useRouter();
   const [completed, setCompleted] = useState<string[]>([]);
+  const [celebrationMsg, setCelebrationMsg] = useState<string | null>(null);
+  const [completedOpen, setCompletedOpen] = useState(false);
+  const celebrationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setCompleted(getCompletedMissions());
@@ -210,18 +221,34 @@ export default function ResultPage() {
 
   const handleToggle = (missionId: string) => {
     const updated = toggleMissionCompletion(missionId);
+    const wasAdded = updated.includes(missionId);
+
     setCompleted([...updated]);
+
+    if (wasAdded) {
+      if (celebrationTimer.current) clearTimeout(celebrationTimer.current);
+      setCelebrationMsg(getCelebrationMsg(missionId, updated));
+      celebrationTimer.current = setTimeout(() => setCelebrationMsg(null), 2000);
+    } else {
+      setCelebrationMsg(null);
+    }
   };
 
   const answeredCount = measurementResults.filter((q) => q.answered).length;
-  const orderedCategories = getCategoriesInOrder();
   const completionPct = Math.round((completed.length / TOTAL_MISSIONS) * 100);
+  const nextMission = getNextMission(completed);
+  const allDone = completed.length === TOTAL_MISSIONS;
+
+  // 완료 미션을 난이도 순서 기준으로 정렬
+  const completedMissions = MISSION_ORDER_BY_DIFFICULTY
+    .filter((id) => completed.includes(id))
+    .map((id) => MISSIONS.find((m) => m.id === id))
+    .filter((m): m is Mission => !!m);
 
   return (
     <div className="app-container">
       <Header isLoggedIn={true} stores={[{ name: "한미옥 광장점" }]} />
 
-      {/* 하단 Sticky CTA 높이만큼 패딩 확보 */}
       <main style={{ padding: "20px 20px 112px" }}>
 
         {/* ─── [1] 헤더 영역 ──────────────────────────────── */}
@@ -263,7 +290,6 @@ export default function ResultPage() {
             🔍 ChatGPT가 사장님 매장을 알고 있는지 확인했어요
           </p>
 
-          {/* 종합 결과 */}
           <div style={{ textAlign: "center", marginBottom: "24px" }}>
             <p style={{
               fontSize: "60px", fontWeight: 900, color: "var(--accent)",
@@ -276,7 +302,6 @@ export default function ResultPage() {
             </p>
           </div>
 
-          {/* 개별 질문 결과 */}
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {measurementResults.map((q, i) => (
               <div key={i} style={{
@@ -285,7 +310,6 @@ export default function ResultPage() {
                 borderRadius: "var(--r-sm)",
                 border: `1px solid ${q.answered ? "rgba(22,163,74,0.25)" : "rgba(255,255,255,0.06)"}`,
               }}>
-                {/* 질문 헤더 */}
                 <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: q.answered ? 0 : "10px" }}>
                   <span style={{
                     fontSize: "10px", fontWeight: 700, padding: "2px 6px",
@@ -295,9 +319,7 @@ export default function ResultPage() {
                   }}>
                     {q.depth}
                   </span>
-                  <span style={{
-                    fontSize: "12.5px", color: "#D4D4D8", flex: 1, lineHeight: 1.5,
-                  }}>
+                  <span style={{ fontSize: "12.5px", color: "#D4D4D8", flex: 1, lineHeight: 1.5 }}>
                     {q.question}
                   </span>
                   <span style={{
@@ -310,7 +332,6 @@ export default function ResultPage() {
                   </span>
                 </div>
 
-                {/* 노출 안 됨인 경우: GPT 추천 매장 표시 */}
                 {!q.answered && q.recommendedStores && q.recommendedStores.length > 0 && (
                   <div style={{
                     background: "rgba(255,255,255,0.03)",
@@ -324,9 +345,7 @@ export default function ResultPage() {
                     }}>
                       💡 GPT가 추천한 매장
                     </p>
-                    <p style={{
-                      fontSize: "12px", color: "#D4D4D8", margin: 0, lineHeight: 1.6,
-                    }}>
+                    <p style={{ fontSize: "12px", color: "#D4D4D8", margin: 0, lineHeight: 1.6 }}>
                       {q.recommendedStores.join(", ")}
                     </p>
                   </div>
@@ -335,7 +354,6 @@ export default function ResultPage() {
             ))}
           </div>
 
-          {/* 중요 인사이트 */}
           <div style={{
             marginTop: "16px", padding: "12px 14px",
             background: "rgba(255,255,255,0.04)", borderRadius: "var(--r-sm)",
@@ -351,7 +369,6 @@ export default function ResultPage() {
             </p>
           </div>
 
-          {/* 종합 메시지 */}
           <div style={{
             marginTop: "12px", padding: "12px 14px",
             background: "rgba(232,93,58,0.08)", borderRadius: "var(--r-sm)",
@@ -387,7 +404,7 @@ export default function ResultPage() {
           </div>
         */}
 
-        {/* ─── [4] PDF 다운로드 ──────────────────────────── */}
+        {/* ─── [3] PDF 다운로드 ──────────────────────────── */}
         <div style={{
           background: "#FFF7F3", border: "1px solid rgba(232,93,58,0.2)",
           borderRadius: "var(--r-md)", padding: "14px 16px", marginBottom: "28px",
@@ -416,7 +433,7 @@ export default function ResultPage() {
           </div>
         </div>
 
-        {/* ─── [5] 15개 미션 체크리스트 ───────────────────── */}
+        {/* ─── [4] 미션 체크리스트 섹션 ───────────────────── */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
           <p style={{
             fontSize: "11px", fontWeight: 700, color: "var(--ink-muted)",
@@ -426,158 +443,259 @@ export default function ResultPage() {
           </p>
           <span style={{
             fontSize: "12px", fontWeight: 700,
-            color: completed.length === TOTAL_MISSIONS ? "var(--success)" : "var(--accent)",
+            color: allDone ? "var(--success)" : "var(--accent)",
             fontFamily: "var(--f-mono)",
           }}>
             {completed.length}/{TOTAL_MISSIONS} 완료
           </span>
         </div>
 
-        {/* 종합 진척도 카드 / 축하 카드 */}
-        {completed.length === TOTAL_MISSIONS ? (
+        {/* 모두 완료 → 축하 카드 */}
+        {allDone ? (
           <div style={{
             background: "#F0FDF4", border: "1px solid #86EFAC",
-            borderRadius: "var(--r-md)", padding: "18px 16px", marginBottom: "20px",
+            borderRadius: "var(--r-md)", padding: "24px 20px", marginBottom: "20px",
+            textAlign: "center",
           }}>
-            <p style={{ fontSize: "20px", fontWeight: 900, color: "#166534", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
-              🎉 기본기 완성!
+            <p style={{ fontSize: "28px", margin: "0 0 8px" }}>🌟</p>
+            <p style={{ fontSize: "20px", fontWeight: 900, color: "#166534", margin: "0 0 10px", letterSpacing: "-0.02em" }}>
+              모든 미션 완료!
             </p>
-            <p style={{ fontSize: "13px", color: "#16A34A", margin: 0, lineHeight: 1.65 }}>
+            <p style={{ fontSize: "13px", color: "#16A34A", margin: "0 0 16px", lineHeight: 1.65 }}>
+              사장님 매장의 GPT 노출 기본기를<br />완벽하게 세팅하셨어요!
+            </p>
+            <p style={{ fontSize: "12px", color: "#15803D", margin: "0 0 20px", lineHeight: 1.6 }}>
               GPT 학습 반영까지 2~4주 소요됩니다.<br />
               토크비가 매월 자동 진단해드릴게요!
             </p>
+            <button
+              onClick={() => router.push("/mypage")}
+              style={{
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                padding: "13px 24px", background: "#16A34A", color: "#FFFFFF",
+                borderRadius: "var(--r-sm)", fontSize: "14px", fontWeight: 800,
+                border: "none", cursor: "pointer",
+              }}
+            >
+              마이페이지에서 결과 확인 →
+            </button>
           </div>
         ) : (
-          <div style={{
-            background: "var(--bg-soft)", border: "1px solid var(--border)",
-            borderRadius: "var(--r-md)", padding: "16px", marginBottom: "20px",
-          }}>
-            <p style={{ fontSize: "13px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px" }}>
-              🎯 사장님 매장 GPT 노출 기본기
-            </p>
+          <>
+            {/* 종합 진척도 카드 */}
             <div style={{
-              height: "8px", background: "var(--bg-deep)", borderRadius: "999px",
-              overflow: "hidden", marginBottom: "8px",
+              background: "var(--bg-soft)", border: "1px solid var(--border)",
+              borderRadius: "var(--r-md)", padding: "16px", marginBottom: "16px",
             }}>
+              <p style={{ fontSize: "13px", fontWeight: 700, color: "var(--ink)", margin: "0 0 12px" }}>
+                🎯 사장님 매장 GPT 노출 기본기
+              </p>
               <div style={{
-                height: "100%", background: "var(--accent)", borderRadius: "999px",
-                width: `${completionPct}%`, transition: "width 0.4s ease",
-              }} />
-            </div>
-            <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0, textAlign: "right" }}>
-              <span style={{ fontWeight: 700, color: completed.length > 0 ? "var(--accent)" : "var(--ink-muted)", fontFamily: "var(--f-mono)" }}>
-                {completed.length}/{TOTAL_MISSIONS}
-              </span>{" "}미션 완료 · {completionPct}%
-            </p>
-          </div>
-        )}
-
-        {/* 카테고리별 미션 (아코디언) */}
-        {orderedCategories.map((cat) => {
-          const missions = getMissionsByCategory(cat.id);
-          const completedInCat = missions.filter((m) => completed.includes(m.id)).length;
-          const allDone = completedInCat === missions.length;
-
-          return (
-            <div key={cat.id} style={{ marginBottom: "20px" }}>
-              {/* 카테고리 헤더 */}
-              <div style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                paddingBottom: "8px", marginBottom: "8px",
-                borderBottom: "1px solid var(--border)",
+                height: "8px", background: "var(--bg-deep)", borderRadius: "999px",
+                overflow: "hidden", marginBottom: "8px",
               }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "2px" }}>
-                    <p style={{ fontSize: "13px", fontWeight: 800, color: "var(--ink)", margin: 0 }}>
-                      {cat.name}
-                    </p>
-                    {cat.importance === 3 && (
-                      <span style={{
-                        fontSize: "10px", fontWeight: 700, color: "var(--accent)",
-                        background: "var(--accent-soft)", padding: "1px 6px",
-                        borderRadius: "999px", border: "1px solid rgba(232,93,58,0.2)",
-                        flexShrink: 0,
-                      }}>
-                        영향력 가장 큼
-                      </span>
-                    )}
-                  </div>
-                  <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: 0 }}>
-                    {cat.description}
-                  </p>
-                </div>
+                <div style={{
+                  height: "100%", background: "var(--accent)", borderRadius: "999px",
+                  width: `${completionPct}%`, transition: "width 0.4s ease",
+                }} />
+              </div>
+              <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0, textAlign: "right" }}>
                 <span style={{
-                  fontSize: "12px", fontWeight: 700, flexShrink: 0, marginLeft: "12px",
-                  color: allDone ? "var(--success)" : "var(--ink-muted)",
+                  fontWeight: 700,
+                  color: completed.length > 0 ? "var(--accent)" : "var(--ink-muted)",
                   fontFamily: "var(--f-mono)",
                 }}>
-                  {completedInCat}/{missions.length}
-                </span>
-              </div>
-
-              {/* 미션 아코디언 */}
-              <Accordion type="multiple" style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                {missions.map((mission) => {
-                  const isCompleted = completed.includes(mission.id);
-                  return (
-                    <AccordionItem
-                      key={mission.id}
-                      value={mission.id}
-                      className="border-0"
-                      style={{
-                        background: isCompleted ? "var(--success-soft)" : "var(--white)",
-                        border: `1px solid ${isCompleted ? "rgba(22,163,74,0.2)" : "var(--border)"}`,
-                        borderRadius: "var(--r-sm)",
-                        overflow: "hidden",
-                        transition: "background 0.15s, border-color 0.15s",
-                      }}
-                    >
-                      {/* 미션 항목 헤더: 체크박스 + 제목 + 시간 + 화살표 */}
-                      <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", padding: "10px 12px" }}>
-                        {/* 체크박스: 클릭이 아코디언 토글로 전파되지 않도록 */}
-                        <div
-                          onClick={(e) => e.stopPropagation()}
-                          style={{ paddingTop: "3px", flexShrink: 0 }}
-                        >
-                          <Checkbox
-                            id={`cb-${mission.id}`}
-                            checked={isCompleted}
-                            onCheckedChange={() => handleToggle(mission.id)}
-                          />
-                        </div>
-                        {/* AccordionTrigger: 제목 + 소요시간 + 자동 화살표 */}
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <AccordionTrigger className="py-0 hover:no-underline w-full">
-                            <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-                              <p style={{
-                                fontSize: "13px", fontWeight: 600, margin: "0 0 2px",
-                                color: isCompleted ? "var(--ink-muted)" : "var(--ink)",
-                                textDecoration: isCompleted ? "line-through" : "none",
-                                lineHeight: 1.45,
-                              }}>
-                                {mission.title}
-                              </p>
-                              <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: 0 }}>
-                                ⏱ {mission.duration}
-                              </p>
-                            </div>
-                          </AccordionTrigger>
-                        </div>
-                      </div>
-
-                      {/* 펼침 영역: 미션 가이드 */}
-                      <AccordionContent className="p-0">
-                        <MissionGuide mission={mission} />
-                      </AccordionContent>
-                    </AccordionItem>
-                  );
-                })}
-              </Accordion>
+                  {completed.length}/{TOTAL_MISSIONS}
+                </span>{" "}미션 완료 · {completionPct}%
+              </p>
             </div>
-          );
-        })}
 
-        {/* ─── [6] GPT 학습 안내 메시지 (파란색) ─────────── */}
+            {/* 축하 토스트 */}
+            {celebrationMsg && (
+              <div style={{
+                background: "#F0FDF4", border: "1px solid #86EFAC",
+                borderRadius: "var(--r-sm)", padding: "12px 14px", marginBottom: "12px",
+                transition: "opacity 0.3s ease",
+              }}>
+                <p style={{ fontSize: "13px", fontWeight: 700, color: "#166534", margin: 0 }}>
+                  {celebrationMsg}
+                </p>
+              </div>
+            )}
+
+            {/* 다음 미션 카드 */}
+            {nextMission && (
+              <div style={{
+                background: "var(--white)", border: "2px solid var(--accent)",
+                borderRadius: "var(--r-md)", padding: "16px", marginBottom: "16px",
+                boxShadow: "0 2px 12px rgba(232,93,58,0.1)",
+              }}>
+                <p style={{
+                  fontSize: "11px", fontWeight: 700, color: "var(--accent)",
+                  margin: "0 0 12px", letterSpacing: "0.04em", textTransform: "uppercase",
+                }}>
+                  🎯 사장님의 다음 미션
+                </p>
+
+                {/* 미션 아코디언 (단일) */}
+                <Accordion type="single" collapsible style={{ marginBottom: "14px" }}>
+                  <AccordionItem
+                    value={nextMission.id}
+                    className="border-0"
+                    style={{
+                      background: "var(--bg-soft)",
+                      border: "1px solid var(--border)",
+                      borderRadius: "var(--r-sm)",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", padding: "10px 12px" }}>
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ paddingTop: "3px", flexShrink: 0 }}
+                      >
+                        <Checkbox
+                          id={`cb-next-${nextMission.id}`}
+                          checked={completed.includes(nextMission.id)}
+                          onCheckedChange={() => handleToggle(nextMission.id)}
+                        />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <AccordionTrigger className="py-0 hover:no-underline w-full">
+                          <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
+                            <p style={{
+                              fontSize: "14px", fontWeight: 700, margin: "0 0 3px",
+                              color: "var(--ink)", lineHeight: 1.4,
+                            }}>
+                              {nextMission.title}
+                            </p>
+                            <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: 0 }}>
+                              ⏱ {nextMission.duration}
+                            </p>
+                          </div>
+                        </AccordionTrigger>
+                      </div>
+                    </div>
+                    <AccordionContent className="p-0">
+                      <MissionGuide mission={nextMission} />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+
+                <p style={{
+                  fontSize: "12px", color: "var(--ink-mid)", margin: 0,
+                  lineHeight: 1.65, textAlign: "center",
+                }}>
+                  💡 1개씩 차근차근 진행하면<br />
+                  부담 없이 GPT 노출 기본기를 완성할 수 있어요!
+                </p>
+              </div>
+            )}
+
+            {/* 완료한 미션 영역 (1개 이상일 때만 표시) */}
+            {completedMissions.length > 0 && (
+              <div style={{ marginBottom: "16px" }}>
+                <button
+                  onClick={() => setCompletedOpen((v) => !v)}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    width: "100%", padding: "12px 14px",
+                    background: "var(--bg-soft)", border: "1px solid var(--border)",
+                    borderRadius: completedOpen ? "var(--r-sm) var(--r-sm) 0 0" : "var(--r-sm)",
+                    cursor: "pointer",
+                  }}
+                >
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: "var(--success)" }}>
+                    ✅ 완료한 미션 ({completedMissions.length})
+                  </span>
+                  <span style={{
+                    fontSize: "11px", color: "var(--ink-muted)",
+                    transition: "transform 0.2s",
+                    display: "inline-block",
+                    transform: completedOpen ? "rotate(180deg)" : "rotate(0deg)",
+                  }}>
+                    ▼
+                  </span>
+                </button>
+
+                {completedOpen && (
+                  <div style={{
+                    border: "1px solid var(--border)", borderTop: "none",
+                    borderRadius: "0 0 var(--r-sm) var(--r-sm)",
+                    overflow: "hidden",
+                  }}>
+                    <Accordion type="multiple" style={{ display: "flex", flexDirection: "column" }}>
+                      {completedMissions.map((mission) => (
+                        <AccordionItem
+                          key={mission.id}
+                          value={mission.id}
+                          className="border-0"
+                          style={{
+                            background: "var(--success-soft)",
+                            borderBottom: "1px solid rgba(22,163,74,0.1)",
+                          }}
+                        >
+                          <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", padding: "10px 12px" }}>
+                            <div
+                              onClick={(e) => e.stopPropagation()}
+                              style={{ paddingTop: "3px", flexShrink: 0 }}
+                            >
+                              <Checkbox
+                                id={`cb-done-${mission.id}`}
+                                checked={true}
+                                onCheckedChange={() => handleToggle(mission.id)}
+                              />
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <AccordionTrigger className="py-0 hover:no-underline w-full">
+                                <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
+                                  <p style={{
+                                    fontSize: "13px", fontWeight: 600, margin: "0 0 2px",
+                                    color: "var(--ink-muted)",
+                                    textDecoration: "line-through",
+                                    lineHeight: 1.45,
+                                  }}>
+                                    {mission.title}
+                                  </p>
+                                  <p style={{ fontSize: "11px", color: "var(--ink-muted)", margin: 0 }}>
+                                    ⏱ {mission.duration}
+                                  </p>
+                                </div>
+                              </AccordionTrigger>
+                            </div>
+                          </div>
+                          <AccordionContent className="p-0">
+                            <MissionGuide mission={mission} />
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 전체 미션 마이페이지 안내 */}
+            <div style={{
+              textAlign: "center", padding: "12px 0", marginBottom: "24px",
+            }}>
+              <p style={{ fontSize: "12px", color: "var(--ink-muted)", margin: "0 0 6px" }}>
+                💡 전체 15개 미션은 마이페이지에서 확인하실 수 있어요
+              </p>
+              <Link
+                href="/mypage"
+                style={{
+                  fontSize: "12px", fontWeight: 700,
+                  color: "var(--accent)", textDecoration: "underline",
+                }}
+              >
+                마이페이지로 이동 →
+              </Link>
+            </div>
+          </>
+        )}
+
+        {/* ─── [5] GPT 학습 안내 메시지 (파란색) ─────────── */}
         <div style={{
           background: "#DBEAFE", border: "1px solid #93C5FD",
           borderRadius: "var(--r-md)", padding: "14px 16px", marginBottom: "24px",
@@ -591,7 +709,7 @@ export default function ResultPage() {
           </p>
         </div>
 
-        {/* ─── [7] 친구 초대 블록 ──────────────────────────── */}
+        {/* ─── [6] 친구 초대 블록 ──────────────────────────── */}
         <div style={{
           background: "var(--white)", border: "1px solid var(--border)",
           borderRadius: "var(--r-md)", padding: "16px",
@@ -602,7 +720,6 @@ export default function ResultPage() {
             GPT 노출 변화를 빨리 확인하고 싶으신가요?
           </p>
 
-          {/* 즉시 보상 */}
           <div style={{
             background: "var(--bg-soft)", borderRadius: "var(--r-sm)",
             padding: "10px 14px", marginBottom: "8px",
@@ -619,7 +736,6 @@ export default function ResultPage() {
               <span style={{ fontSize: "11px", color: "var(--ink-muted)", marginTop: "2px", flexShrink: 0 }}>·</span>
               <span style={{ fontSize: "12px", color: "var(--ink-mid)" }}>🎫 진단권 1개 추가 (월 최대 5개)</span>
             </div>
-            {/* 진단권 설명 */}
             <div style={{
               marginLeft: "14px", marginTop: "6px",
               paddingLeft: "10px", borderLeft: "2px solid var(--border)",
@@ -636,7 +752,6 @@ export default function ResultPage() {
             </div>
           </div>
 
-          {/* 양방향 보상 */}
           <div style={{
             background: "#FFF4E8", border: "1px solid #FFD9AD",
             borderRadius: "var(--r-sm)", padding: "8px 12px", marginBottom: "10px",
@@ -671,7 +786,7 @@ export default function ResultPage() {
 
       <InstallPrompt autoDelay={8000} />
 
-      {/* ─── [8] Sticky CTA (모바일 하단 고정) ──────────── */}
+      {/* ─── [7] Sticky CTA (모바일 하단 고정) ──────────── */}
       <div style={{
         position: "fixed", bottom: 0,
         left: "50%", transform: "translateX(-50%)",

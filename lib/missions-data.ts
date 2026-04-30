@@ -469,3 +469,36 @@ export function getCompletionRate(): number {
   const completed = getCompletedMissions();
   return Math.round((completed.length / MISSIONS.length) * 100);
 }
+
+// ─────────────────────────────────────────────
+// 난이도 순서 (결과 페이지 "다음 미션" 기준)
+// ─────────────────────────────────────────────
+
+export const MISSION_ORDER_BY_DIFFICULTY: string[] = [
+  // Tier 1 - 매우 쉬움 (5분, 단순 확인/복붙)
+  "m1",  // 매장명/주소/전화/영업시간 확인
+  "m12", // 매장명+지역 네이버 검색
+  "m6",  // 구글 GBP 사진 3장
+  // Tier 2 - 쉬움 (10분, 양식 따라하기)
+  "m14", // 인스타 프로필 정보 등록
+  "m7",  // 구글 GBP 카테고리 + 영문 1문장
+  "m10", // 인스타 위치 태그 + 해시태그
+  // Tier 3 - 보통 (15분, 가입/등록)
+  "m13", // 인스타 비즈니스 계정 전환
+  "m15", // 카카오톡 채널 생성
+  "m4",  // 업체 소개글 100자
+  "m5",  // 구글 GBP 등록 + 인증
+  // Tier 4 - 어려움 (20분, 창작 작업)
+  "m11", // SNS 신메뉴/이벤트 게시물
+  "m3",  // 사진 5장 등록
+  // Tier 5 - 가장 어려움 (30분, 양 많음)
+  "m2",  // 메뉴 + 가격 모두 등록
+  "m8",  // 최근 30일 리뷰 답글
+  "m9",  // 답글에 핵심 키워드
+];
+
+export function getNextMission(completedIds: string[]): Mission | null {
+  const nextId = MISSION_ORDER_BY_DIFFICULTY.find((id) => !completedIds.includes(id));
+  if (!nextId) return null;
+  return MISSIONS.find((m) => m.id === nextId) ?? null;
+}
